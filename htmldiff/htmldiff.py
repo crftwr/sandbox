@@ -19,6 +19,17 @@ class ElementAndDepth:
         for key, value in self.elm.attrib.iteritems():
             h += hash(key) + hash(value)
         return hash(h)
+    
+    def __unicode__(self):
+        s = "<" + self.elm.tag
+        for key, value in self.elm.attrib.iteritems():
+            s += " " + key + "=" + '"' + value + '"'
+        
+        if self.elm.text:
+            s += ">" + self.elm.text + "</" + self.elm.tag + ">"
+        else:
+            s += "/>"
+        return s
 
 def eachElement( elm, depth ):
 
@@ -40,16 +51,41 @@ def docToElmList(doc):
     
     return elm_list
 
-original_doc = etree.parse("./original.html")
-modified_doc = etree.parse("./modified.html")
+original_doc = etree.parse("./testdata/original.html")
+modified_doc = etree.parse("./testdata/modified.html")
 
 original_elm_list = docToElmList(original_doc)
 modified_elm_list = docToElmList(modified_doc)
 
 sequence_matcher = difflib.SequenceMatcher( None, original_elm_list, modified_elm_list )
 
-print "%3.2f%% match" % sequence_matcher.ratio()
+#print "%3.2f%% match" % sequence_matcher.ratio()
 
 for tag, i1, i2, j1, j2 in sequence_matcher.get_opcodes():
-    print ("%7s a[%d:%d] b[%d:%d]" % (tag, i1, i2, j1, j2))
+    
+    if tag=="equal":
+        continue
 
+    print ("%7s a[%d:%d] b[%d:%d]:" % (tag, i1, i2, j1, j2))
+
+    if tag=="replace":
+
+        print "  original:"
+        for i in xrange(i1,i2):
+            print "    " + unicode(original_elm_list[i])
+
+        print "  modified:"
+        for j in xrange(j1,j2):
+            print "    " + unicode(modified_elm_list[j])
+
+    elif tag=="delete":
+
+        for i in xrange(i1,i2):
+            print "    " + unicode(original_elm_list[i])
+
+    elif tag=="insert":
+
+        for j in xrange(j1,j2):
+            print "    " + unicode(modified_elm_list[j])
+
+    print ""
