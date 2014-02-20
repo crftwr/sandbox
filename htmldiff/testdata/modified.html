@@ -1,0 +1,2785 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.11: http://docutils.sourceforge.net/" />
+<title>Pythonスクリプトで拡張可能なテキストエディタ [ LREdit ]</title>
+<style type="text/css">
+
+/*
+:Author: David Goodger (goodger@python.org)
+:Id: $Id: html4css1.css 5951 2009-05-18 18:03:10Z milde $
+:Copyright: This stylesheet has been placed in the public domain.
+
+Default cascading style sheet for the HTML output of Docutils.
+
+See http://docutils.sf.net/docs/howto/html-stylesheets.html for how to
+customize this style sheet.
+*/
+
+/* used to remove borders from tables and images */
+.borderless, table.borderless td, table.borderless th {
+  border: 0 }
+
+table.borderless td, table.borderless th {
+  /* Override padding for "table.docutils td" with "! important".
+     The right padding separates the table cells. */
+  padding: 0 0.5em 0 0 ! important }
+
+.first {
+  /* Override more specific margin styles with "! important". */
+  margin-top: 0 ! important }
+
+.last, .with-subtitle {
+  margin-bottom: 0 ! important }
+
+.hidden {
+  display: none }
+
+a.toc-backref {
+  text-decoration: none ;
+  color: black }
+
+blockquote {
+  background-color: #FFFFFF;
+  border-left: 0px solid #FFFFFF;
+  margin: 0 24px 0 4px;
+  padding: 0 12px 0 16px;
+}
+
+blockquote.epigraph {
+  margin: 2em 5em ; }
+
+dl.docutils dd {
+  margin-bottom: 0.5em }
+
+/* Uncomment (and remove this text!) to get bold-faced definition list terms
+dl.docutils dt {
+  font-weight: bold }
+*/
+
+div.abstract {
+  margin: 2em 5em }
+
+div.abstract p.topic-title {
+  font-weight: bold ;
+  text-align: center }
+
+div.admonition, div.attention, div.caution, div.danger, div.error,
+div.hint, div.important, div.note, div.tip, div.warning {
+  margin: 2em ;
+  border: medium outset ;
+  padding: 1em }
+
+div.admonition p.admonition-title, div.hint p.admonition-title,
+div.important p.admonition-title, div.note p.admonition-title,
+div.tip p.admonition-title {
+  font-weight: bold ;
+  font-family: sans-serif }
+
+div.attention p.admonition-title, div.caution p.admonition-title,
+div.danger p.admonition-title, div.error p.admonition-title,
+div.warning p.admonition-title {
+  color: red ;
+  font-weight: bold ;
+  font-family: sans-serif }
+
+/* Uncomment (and remove this text!) to get reduced vertical space in
+   compound paragraphs.
+div.compound .compound-first, div.compound .compound-middle {
+  margin-bottom: 0.5em }
+
+div.compound .compound-last, div.compound .compound-middle {
+  margin-top: 0.5em }
+*/
+
+div.dedication {
+  margin: 2em 5em ;
+  text-align: center ;
+  font-style: italic }
+
+div.dedication p.topic-title {
+  font-weight: bold ;
+  font-style: normal }
+
+div.figure {
+  margin-left: 2em ;
+  margin-right: 2em }
+
+div.footer, div.header {
+  clear: both;
+  font-size: smaller }
+
+div.line-block {
+  display: block ;
+  margin-top: 1em ;
+  margin-bottom: 1em }
+
+div.line-block div.line-block {
+  margin-top: 0 ;
+  margin-bottom: 0 ;
+  margin-left: 1.5em }
+
+div.sidebar {
+  margin: 0 0 0.5em 1em ;
+  border: medium outset ;
+  padding: 1em ;
+  background-color: #ffffee ;
+  width: 40% ;
+  float: right ;
+  clear: right }
+
+div.sidebar p.rubric {
+  font-family: sans-serif ;
+  font-size: medium }
+
+div.system-messages {
+  margin: 5em }
+
+div.system-messages h1 {
+  color: red }
+
+div.system-message {
+  border: medium outset ;
+  padding: 1em }
+
+div.system-message p.system-message-title {
+  color: red ;
+  font-weight: bold }
+
+div.topic {
+  margin: 2em }
+
+h1.section-subtitle, h2.section-subtitle, h3.section-subtitle,
+h4.section-subtitle, h5.section-subtitle, h6.section-subtitle {
+  margin-top: 0.4em }
+
+h1.title {
+  text-align: center }
+
+h2.subtitle {
+  text-align: center }
+
+hr.docutils {
+  width: 75% }
+
+img.align-left, .figure.align-left{
+  clear: left ;
+  float: left ;
+  margin-right: 1em }
+
+img.align-right, .figure.align-right {
+  clear: right ;
+  float: right ;
+  margin-left: 1em }
+
+.align-left {
+  text-align: left }
+
+.align-center {
+  clear: both ;
+  text-align: center }
+
+.align-right {
+  text-align: right }
+
+/* reset inner alignment in figures */
+div.align-right {
+  text-align: left }
+
+/* div.align-center * { */
+/*   text-align: left } */
+
+ol.simple, ul.simple {
+  margin-bottom: 1em }
+
+ol.arabic {
+  list-style: decimal }
+
+ol.loweralpha {
+  list-style: lower-alpha }
+
+ol.upperalpha {
+  list-style: upper-alpha }
+
+ol.lowerroman {
+  list-style: lower-roman }
+
+ol.upperroman {
+  list-style: upper-roman }
+
+p.attribution {
+  text-align: right ;
+  margin-left: 50% }
+
+p.caption {
+  font-style: italic }
+
+p.credits {
+  font-style: italic ;
+  font-size: smaller }
+
+p.label {
+  white-space: nowrap }
+
+p.rubric {
+  font-weight: bold ;
+  font-size: larger ;
+  color: maroon ;
+  text-align: center }
+
+p.sidebar-title {
+  font-family: sans-serif ;
+  font-weight: bold ;
+  font-size: larger }
+
+p.sidebar-subtitle {
+  font-family: sans-serif ;
+  font-weight: bold }
+
+p.topic-title {
+  font-weight: bold }
+
+pre.address {
+  margin-bottom: 0 ;
+  margin-top: 0 ;
+  font: inherit }
+
+pre.literal-block, pre.doctest-block {
+  margin-left: 2em ;
+  margin-right: 2em }
+
+span.classifier {
+  font-family: sans-serif ;
+  font-style: oblique }
+
+span.classifier-delimiter {
+  font-family: sans-serif ;
+  font-weight: bold }
+
+span.interpreted {
+  font-family: sans-serif }
+
+span.option {
+  white-space: nowrap }
+
+span.pre {
+  white-space: pre }
+
+span.problematic {
+  color: red }
+
+span.section-subtitle {
+  /* font-size relative to parent (h1..h6 element) */
+  font-size: 80% }
+
+table.citation {
+  border-left: solid 1px gray;
+  margin-left: 1px }
+
+table.docinfo {
+  margin: 2em 4em }
+
+table.docutils {
+  margin-top: 0.5em ;
+  margin-bottom: 0.5em }
+
+table.footnote {
+  border-left: solid 1px black;
+  margin-left: 1px }
+
+table.docutils td, table.docutils th,
+table.docinfo td, table.docinfo th {
+  padding-left: 0.5em ;
+  padding-right: 0.5em ;
+  vertical-align: top }
+
+table.docutils th.field-name, table.docinfo th.docinfo-name {
+  font-weight: bold ;
+  text-align: left ;
+  white-space: nowrap ;
+  padding-left: 0 }
+
+h1 tt.docutils, h2 tt.docutils, h3 tt.docutils,
+h4 tt.docutils, h5 tt.docutils, h6 tt.docutils {
+  font-size: 100% }
+
+ul.auto-toc {
+  list-style-type: none }
+
+/* added by craftware */
+
+div.highlight {
+  margin-left: 4em;
+  margin-right: 4em;
+  background-color: #dddddd }
+
+.hll { background-color: #ffffcc }
+.c { color: #408080; font-style: italic } /* Comment */
+.err { border: 1px solid #FF0000 } /* Error */
+.k { color: #008000; font-weight: bold } /* Keyword */
+.o { color: #666666 } /* Operator */
+.cm { color: #408080; font-style: italic } /* Comment.Multiline */
+.cp { color: #BC7A00 } /* Comment.Preproc */
+.c1 { color: #408080; font-style: italic } /* Comment.Single */
+.cs { color: #408080; font-style: italic } /* Comment.Special */
+.gd { color: #A00000 } /* Generic.Deleted */
+.ge { font-style: italic } /* Generic.Emph */
+.gr { color: #FF0000 } /* Generic.Error */
+.gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.gi { color: #00A000 } /* Generic.Inserted */
+.go { color: #808080 } /* Generic.Output */
+.gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.gs { font-weight: bold } /* Generic.Strong */
+.gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.gt { color: #0040D0 } /* Generic.Traceback */
+.kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.kp { color: #008000 } /* Keyword.Pseudo */
+.kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.kt { color: #B00040 } /* Keyword.Type */
+.m { color: #666666 } /* Literal.Number */
+.s { color: #BA2121 } /* Literal.String */
+.na { color: #7D9029 } /* Name.Attribute */
+.nb { color: #008000 } /* Name.Builtin */
+.nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.no { color: #880000 } /* Name.Constant */
+.nd { color: #AA22FF } /* Name.Decorator */
+.ni { color: #999999; font-weight: bold } /* Name.Entity */
+.ne { color: #D2413A; font-weight: bold } /* Name.Exception */
+.nf { color: #0000FF } /* Name.Function */
+.nl { color: #A0A000 } /* Name.Label */
+.nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.nt { color: #008000; font-weight: bold } /* Name.Tag */
+.nv { color: #19177C } /* Name.Variable */
+.ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.w { color: #bbbbbb } /* Text.Whitespace */
+.mf { color: #666666 } /* Literal.Number.Float */
+.mh { color: #666666 } /* Literal.Number.Hex */
+.mi { color: #666666 } /* Literal.Number.Integer */
+.mo { color: #666666 } /* Literal.Number.Oct */
+.sb { color: #BA2121 } /* Literal.String.Backtick */
+.sc { color: #BA2121 } /* Literal.String.Char */
+.sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.s2 { color: #BA2121 } /* Literal.String.Double */
+.se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
+.sh { color: #BA2121 } /* Literal.String.Heredoc */
+.si { color: #BB6688; font-weight: bold } /* Literal.String.Interpol */
+.sx { color: #008000 } /* Literal.String.Other */
+.sr { color: #BB6688 } /* Literal.String.Regex */
+.s1 { color: #BA2121 } /* Literal.String.Single */
+.ss { color: #19177C } /* Literal.String.Symbol */
+.bp { color: #008000 } /* Name.Builtin.Pseudo */
+.vc { color: #19177C } /* Name.Variable.Class */
+.vg { color: #19177C } /* Name.Variable.Global */
+.vi { color: #19177C } /* Name.Variable.Instance */
+.il { color: #666666 } /* Literal.Number.Integer.Long */
+
+
+</style>
+</head>
+<body>
+<div class="document" id="python-lredit">
+<h1 class="title">Pythonスクリプトで拡張可能なテキストエディタ [ LREdit ]</h1>
+
+<blockquote>
+<img alt="image/logo.jpg" class="align-center" src="image/logo.jpg" />
+</blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">著作者:</th><td class="field-body">craftware</td>
+</tr>
+<tr class="field"><th class="field-name">連絡先:</th><td class="field-body"><a class="reference external" href="mailto:craftware&#64;gmail.com">craftware&#64;gmail.com</a></td>
+</tr>
+<tr class="field"><th class="field-name">開発環境:</th><td class="field-body">Python + VisualC++2010</td>
+</tr>
+<tr class="field"><th class="field-name">種別:</th><td class="field-body">フリーウェア</td>
+</tr>
+<tr class="field"><th class="field-name">動作環境:</th><td class="field-body">Windows XP/Vista/7/8</td>
+</tr>
+<tr class="field"><th class="field-name">Webサイト:</th><td class="field-body"><a class="reference external" href="http://sites.google.com/site/craftware/">http://sites.google.com/site/craftware/</a></td>
+</tr>
+</tbody>
+</table>
+<div class="contents topic" id="contents">
+<p class="topic-title first">Contents</p>
+<ul class="simple">
+<li><a class="reference internal" href="#id1" id="id54">はじめに</a><ul>
+<li><a class="reference internal" href="#id3" id="id55">スクリーンショット</a></li>
+<li><a class="reference internal" href="#id4" id="id56">動作環境</a></li>
+<li><a class="reference internal" href="#id5" id="id57">配布 / 保障について</a></li>
+<li><a class="reference internal" href="#id6" id="id58">サポートについて</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id7" id="id59">インストール/アンインストール</a><ul>
+<li><a class="reference internal" href="#id8" id="id60">インストール</a></li>
+<li><a class="reference internal" href="#id9" id="id61">アンインストール</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id10" id="id62">使用しているサードパーティ製ソフトウェアについて</a></li>
+<li><a class="reference internal" href="#id11" id="id63">基本的な使い方</a><ul>
+<li><a class="reference internal" href="#id12" id="id64">各部の説明</a></li>
+<li><a class="reference internal" href="#id13" id="id65">キーボード操作</a></li>
+<li><a class="reference internal" href="#id14" id="id66">マウス操作</a></li>
+<li><a class="reference internal" href="#id15" id="id67">ファイルのオープン</a></li>
+<li><a class="reference internal" href="#id16" id="id68">最近開いたファイルのオープン</a></li>
+<li><a class="reference internal" href="#id17" id="id69">ドキュメントの切り替え</a></li>
+<li><a class="reference internal" href="#id18" id="id70">ブックマーク機能</a></li>
+<li><a class="reference internal" href="#id19" id="id71">２画面モード</a></li>
+<li><a class="reference internal" href="#id20" id="id72">コマンドライン</a><ul>
+<li><a class="reference internal" href="#id21" id="id73">コマンドラインの操作方法</a></li>
+<li><a class="reference internal" href="#id22" id="id74">コマンド実行機能</a></li>
+<li><a class="reference internal" href="#id23" id="id75">ファイルオープン機能</a></li>
+<li><a class="reference internal" href="#id24" id="id76">ドキュメント切り替え機能</a></li>
+<li><a class="reference internal" href="#id25" id="id77">テキスト入力式の計算機</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id26" id="id78">検索/置換</a><ul>
+<li><a class="reference internal" href="#id27" id="id79">検索</a></li>
+<li><a class="reference internal" href="#id28" id="id80">置換</a></li>
+<li><a class="reference internal" href="#grep" id="id81">Grep</a></li>
+<li><a class="reference internal" href="#id30" id="id82">比較</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id31" id="id83">単語補完</a></li>
+<li><a class="reference internal" href="#id32" id="id84">矩形選択</a></li>
+<li><a class="reference internal" href="#id33" id="id85">プロジェクト</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id34" id="id86">高度な使い方</a><ul>
+<li><a class="reference internal" href="#id35" id="id87">拡張メニュー/マルチストロークキーバインド</a></li>
+<li><a class="reference internal" href="#id36" id="id88">文字エンコーディング</a></li>
+<li><a class="reference internal" href="#id37" id="id89">改行コード</a></li>
+<li><a class="reference internal" href="#id38" id="id90">シンボル検索</a><ul>
+<li><a class="reference internal" href="#tags" id="id91">TAGSの生成</a></li>
+<li><a class="reference internal" href="#id39" id="id92">シンボル定義位置へジャンプ</a></li>
+<li><a class="reference internal" href="#id40" id="id93">ジャンプ元の位置に戻る</a></li>
+<li><a class="reference internal" href="#id41" id="id94">TAGSの読み込み</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id42" id="id95">カスタマイズ</a><ul>
+<li><a class="reference internal" href="#config-py" id="id96">config.py</a></li>
+<li><a class="reference internal" href="#id43" id="id97">キーの割り当て</a></li>
+<li><a class="reference internal" href="#id44" id="id98">拡張メニューのカスタマイズ</a></li>
+<li><a class="reference internal" href="#id45" id="id99">独自のメニューを追加する</a></li>
+<li><a class="reference internal" href="#id46" id="id100">メニューバーのカスタマイズ</a></li>
+<li><a class="reference internal" href="#extension" id="id101">extensionディレクトリ</a></li>
+<li><a class="reference internal" href="#id47" id="id102">モード</a></li>
+<li><a class="reference internal" href="#id48" id="id103">マイナーモード</a></li>
+<li><a class="reference internal" href="#id49" id="id104">コマンドシステム</a></li>
+<li><a class="reference internal" href="#id50" id="id105">コマンドラインの解釈ルールのカスタマイズ</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id51" id="id106">その他の機能</a><ul>
+<li><a class="reference internal" href="#id52" id="id107">起動オプション</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id53" id="id108">最後に</a></li>
+</ul>
+</div>
+<div class="section" id="id1">
+<h1><a class="toc-backref" href="#id54">はじめに</a></h1>
+<blockquote>
+<p>このソフトウェアは、柔軟なカスタマイズが可能なテキストエディタです。</p>
+<p>プログラマにとって便利な機能を備えています。</p>
+<p><a class="reference external" href="http://sites.google.com/site/craftware/">craftware トップ</a></p>
+<p><a class="reference external" href="https://sites.google.com/site/craftware/lredit">最新版のダウンロード</a></p>
+<p><strong>特徴</strong></p>
+<ul class="simple">
+<li>主にキーボードで操作</li>
+<li>スクリプト言語 Python で機能拡張が可能</li>
+<li>複数ドキュメント</li>
+<li>2画面モード</li>
+<li>シンタックスハイライト</li>
+<li>補完入力</li>
+<li>Grep 機能</li>
+<li>Diff 機能</li>
+<li>TAGS ジャンプ</li>
+<li>プロジェクト機能</li>
+<li>ブックマーク機能</li>
+<li>アウトライン解析</li>
+<li>矩形選択</li>
+<li>テーマと壁紙</li>
+<li>UNICODE ベース</li>
+</ul>
+<p><strong>追加予定の機能</strong></p>
+<ul class="simple">
+<li>罫線モード</li>
+<li>InteliSenseライクな補完</li>
+<li>コードブロックの折りたたみ</li>
+<li>キーボードマクロ</li>
+<li>などなど</li>
+</ul>
+<p><strong>対応言語</strong></p>
+<ul class="simple">
+<li>C</li>
+<li>C++</li>
+<li>C#</li>
+<li>Java</li>
+<li>Python</li>
+<li>JavaScript</li>
+<li>GLSL</li>
+<li>XML</li>
+<li>HTML</li>
+<li>Makefile</li>
+<li>Batch</li>
+<li>Text</li>
+<li>ユーザ定義が可能</li>
+</ul>
+</blockquote>
+<div class="section" id="id3">
+<h2><a class="toc-backref" href="#id55">スクリーンショット</a></h2>
+<blockquote>
+<a class="reference external image-reference" href="image/screenshot.png"><img alt="image/screenshot.png" src="image/screenshot.png" style="height: 200px;" /></a>
+<p>シングルペインモード。</p>
+<a class="reference external image-reference" href="image/screenshot_twopane.png"><img alt="image/screenshot_twopane.png" src="image/screenshot_twopane.png" style="height: 200px;" /></a>
+<p>２ペインモード。</p>
+<a class="reference external image-reference" href="image/screenshot_documents.png"><img alt="image/screenshot_documents.png" src="image/screenshot_documents.png" style="height: 200px;" /></a>
+<p>ドキュメント選択ウインドウ。このウインドウではインクリメンタルサーチ可能。</p>
+<a class="reference external image-reference" href="image/screenshot_filename.png"><img alt="image/screenshot_filename.png" src="image/screenshot_filename.png" style="height: 200px;" /></a>
+<p>CraftLaunch風のファイル名の補完入力。</p>
+<a class="reference external image-reference" href="image/screenshot_completion.png"><img alt="image/screenshot_completion.png" src="image/screenshot_completion.png" style="height: 200px;" /></a>
+<p>単語補完機能。開いているすべての文書の中の単語を使って補完される。</p>
+<a class="reference external image-reference" href="image/screenshot_grepresult.png"><img alt="image/screenshot_grepresult.png" src="image/screenshot_grepresult.png" style="height: 200px;" /></a>
+<p>内蔵の Grep 機能。Grep はサブスレッドで行われるので、編集作業を中断せずに可能。</p>
+<a class="reference external image-reference" href="image/screenshot_diff.png"><img alt="image/screenshot_diff.png" src="image/screenshot_diff.png" style="height: 200px;" /></a>
+<p>内蔵の Diff 機能。ファイルの差分を色付けして表示することができる。</p>
+<a class="reference external image-reference" href="image/screenshot_bookmark.png"><img alt="image/screenshot_bookmark.png" src="image/screenshot_bookmark.png" style="height: 200px;" /></a>
+<p>行単位のブックマーク機能。ブックマークには３種類から選べる。</p>
+<a class="reference external image-reference" href="image/screenshot_block.png"><img alt="image/screenshot_block.png" src="image/screenshot_block.png" style="height: 200px;" /></a>
+<p>矩形選択機能。矩形範囲でのクリップボード操作が可能。</p>
+<a class="reference external image-reference" href="image/screenshot_whitetheme.png"><img alt="image/screenshot_whitetheme.png" src="image/screenshot_whitetheme.png" style="height: 200px;" /></a>
+<p>白テーマ。テーマは自作することもできる。</p>
+<a class="reference external image-reference" href="image/screenshot_wallpaper.png"><img alt="image/screenshot_wallpaper.png" src="image/screenshot_wallpaper.png" style="height: 200px;" /></a>
+<p>壁紙。文字が見にくくならないように、壁紙の色を背景色に近づけることができる。</p>
+</blockquote>
+</div>
+<div class="section" id="id4">
+<h2><a class="toc-backref" href="#id56">動作環境</a></h2>
+<blockquote>
+<p>LREditの実行には以下の環境が必要です。</p>
+<p>Windows XP/Vista/7/8</p>
+</blockquote>
+</div>
+<div class="section" id="id5">
+<h2><a class="toc-backref" href="#id57">配布 / 保障について</a></h2>
+<blockquote>
+<p>このソフトウェアを二次配布する場合は、作者に事前連絡してください。</p>
+<p>このソフトウェアを改造して配布してはいけません。</p>
+<p>このソフトウェアの設定や機能追加は自由に配布して構いません。</p>
+<p>また、本ソフトウェアの使用によるいかなる損害も保障しかねますので、
+プログラムの実行は本人の責任で行ってください。</p>
+</blockquote>
+</div>
+<div class="section" id="id6">
+<h2><a class="toc-backref" href="#id58">サポートについて</a></h2>
+<blockquote>
+<p>LREditに関する質問や要望は、</p>
+<p><a class="reference external" href="http://sites.google.com/site/craftware/lredit/">http://sites.google.com/site/craftware/lredit/</a></p>
+<img alt="image/mailaddress.png" src="image/mailaddress.png" />
+<p>までお願いします。</p>
+</blockquote>
+</div>
+</div>
+<div class="section" id="id7">
+<h1><a class="toc-backref" href="#id59">インストール/アンインストール</a></h1>
+<div class="section" id="id8">
+<h2><a class="toc-backref" href="#id60">インストール</a></h2>
+<blockquote>
+<p>配布されたファイルを解凍すると以下のファイルとフォルダが作成されます。</p>
+<blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="25%" />
+<col width="75%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">名前</th>
+<th class="head">解説</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>lredit.exe</td>
+<td>プログラム本体</td>
+</tr>
+<tr><td>python33.dll</td>
+<td>Pythonランタイムライブラリ</td>
+</tr>
+<tr><td>library.zip</td>
+<td>スクリプトが格納されているアーカイブ</td>
+</tr>
+<tr><td>_config.py</td>
+<td>デフォルト設定ファイル</td>
+</tr>
+<tr><td>readme_en.txt</td>
+<td>最初に読む文書 (英語)</td>
+</tr>
+<tr><td>readme_ja.txt</td>
+<td>最初に読む文書 (日本語)</td>
+</tr>
+<tr><td>lib/</td>
+<td>DLLが格納されているディレクトリ</td>
+</tr>
+<tr><td>extension/</td>
+<td>ユーザサイドのスクリプトを入れるディレクトリ</td>
+</tr>
+<tr><td>theme/</td>
+<td>テーマのデータが格納されているディレクトリ</td>
+</tr>
+<tr><td>dict/</td>
+<td>Migemoの辞書を入れるディレクトリ</td>
+</tr>
+<tr><td>doc/</td>
+<td>ドキュメントが格納されているディレクトリ</td>
+</tr>
+<tr><td>license/</td>
+<td>コピーライト情報が格納されているディレクトリ</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+<p>また、最初の起動で、アプリケーションデータディレクトリに自動的に以下のファイルが作られます。
+( XP では c:/Documents and Settings/Application Data/LREdit、Vista/7 では c:/Users/tom/AppData/Roaming/LREdit)</p>
+<blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="25%" />
+<col width="75%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">名前</th>
+<th class="head">解説</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>config.py</td>
+<td>設定ファイル</td>
+</tr>
+<tr><td>lredit.ini</td>
+<td>状態保存ファイル</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+<p>config.py と lredit.ini は、lredit.exe と同じディレクトリにおいておけば、
+そちらが優先的に使われます。USBメモリなどで持ち歩く際に便利な方法です。</p>
+</blockquote>
+</div>
+<div class="section" id="id9">
+<h2><a class="toc-backref" href="#id61">アンインストール</a></h2>
+<blockquote>
+<p>インストールしたフォルダごと消してください。</p>
+<p>また、アプリケーションデータディレクトリを削除してください。
+( XP では c:/Documents and Settings/Application Data/LREdit、Vista/7 では c:/Users/tom/AppData/Roaming/LREdit)</p>
+<p>このソフトウェアはレジストリを使用しません。</p>
+</blockquote>
+</div>
+</div>
+<div class="section" id="id10">
+<h1><a class="toc-backref" href="#id62">使用しているサードパーティ製ソフトウェアについて</a></h1>
+<blockquote>
+<p>このソフトウェアでは、以下のライブラリ/プログラムを使用しています。</p>
+<dl class="docutils">
+<dt>Python Programming Language</dt>
+<dd><a class="reference external" href="http://www.python.org/">http://www.python.org/</a></dd>
+<dt>Python Imaging Library</dt>
+<dd><a class="reference external" href="http://www.pythonware.com/products/pil/">http://www.pythonware.com/products/pil/</a></dd>
+<dt>comtypes</dt>
+<dd><a class="reference external" href="http://pypi.python.org/pypi/comtypes/">http://pypi.python.org/pypi/comtypes/</a></dd>
+<dt>C/Migemo</dt>
+<dd><a class="reference external" href="http://www.kaoriya.net/">http://www.kaoriya.net/</a></dd>
+<dt>Pygments</dt>
+<dd><a class="reference external" href="http://pygments.org/">http://pygments.org/</a>
+(シンタックスハイライトのための正規表現の定義のみ使用)</dd>
+<dt>zenhan-py</dt>
+<dd><a class="reference external" href="http://code.google.com/p/zenhan-py/">http://code.google.com/p/zenhan-py/</a></dd>
+<dt>Exuberant Ctags</dt>
+<dd><a class="reference external" href="http://ctags.sourceforge.net/">http://ctags.sourceforge.net/</a>
+(TAGS作成用の独立したプログラムとして同梱)</dd>
+</dl>
+</blockquote>
+</div>
+<div class="section" id="id11">
+<h1><a class="toc-backref" href="#id63">基本的な使い方</a></h1>
+<div class="section" id="id12">
+<h2><a class="toc-backref" href="#id64">各部の説明</a></h2>
+<blockquote>
+<img alt="image/parts_normal.png" src="image/parts_normal.png" />
+<p><strong>メニューバー</strong> から、ファイルオープンやクリップボードからの貼り付けといった
+コマンドを実行することができます。
+メニューバーは設定メニューによって非表示にすることも可能です。</p>
+<p><strong>タブバー</strong> には、オープン中の文書がタブで表示されます。タブをクリックすることで、
+アクティブなドキュメントを切り替えることができます。</p>
+<p><strong>テキスト編集領域</strong> は、左右に最大2つまで表示されます。
+テキスト編集領域の左側には、行番号が表示されます。
+行番号の部分は、ブックマークや行の変更の有無も表示されます。</p>
+<p>テキスト編集領域のすぐ下には、編集している文書の状態が表示される <strong>フッタ領域</strong>
+があります。フッタ領域には、ファイル名やモード、エンコーディング、キャレット位置
+などが表示されます。</p>
+<p>フッタ領域の下には、 <strong>ログペイン</strong> があります。
+ログペインは、LREditが内蔵している、Python の標準出力、標準エラーが表示されます。</p>
+<p>ウインドウの一番下には、 <strong>ステータスバー</strong> があります。</p>
+<img alt="image/parts_progressbar.png" src="image/parts_progressbar.png" />
+<p>ステータスバーにはユーザの操作に対するフィードバックとして、メッセージが表示されるほか、
+時間のかかる処理をしている際は、 <strong>プログレスバー</strong> が表示されます。</p>
+<p>また、ステータスバーの領域には、文字列の入力を行う際に、1行の文字列編集領域が
+表示されます。これを <strong>コマンドライン</strong> と呼びます。コマンドラインは、
+コマンドを実行するために使われる場合もあれば、ファイルオープンのためのファイル名の
+入力、文字列検索のための文字列の入力、といったさまざまな文字列入力のために使われます。</p>
+<img alt="image/parts_commandline.png" src="image/parts_commandline.png" />
+<p>コマンドラインによるコマンドの実行は、メニューバーに比べると操作に慣れが必要ですが、
+コマンドの補完機能や、インタラクティブなパラメタの設定など、強力な機能を持っています。</p>
+</blockquote>
+</div>
+<div class="section" id="id13">
+<h2><a class="toc-backref" href="#id65">キーボード操作</a></h2>
+<blockquote>
+<p>このソフトウェアは、主にキーボードを使って操作します。
+キーのアサインは以下のとおりです。</p>
+<blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="32%" />
+<col width="68%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">キー</th>
+<th class="head">解説</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>↑/↓/←/→</td>
+<td>カーソル移動</td>
+</tr>
+<tr><td>Ctrl + ←/→</td>
+<td>単語単位のカーソル移動</td>
+</tr>
+<tr><td>Ctrl + ↑/↓</td>
+<td>スクロール</td>
+</tr>
+<tr><td>PageUp/PageDown</td>
+<td>ページ単位スクロール</td>
+</tr>
+<tr><td>Home/End</td>
+<td>行頭/行末へ移動</td>
+</tr>
+<tr><td>Alt + ↑/↓</td>
+<td>ブックマークか変更行へ移動</td>
+</tr>
+<tr><td>Alt + Shift + ↑/↓</td>
+<td>ブックマークか変更行まで範囲選択</td>
+</tr>
+<tr><td>Ctrl + Home/End</td>
+<td>文書の先頭/末尾へ移動</td>
+</tr>
+<tr><td>Ctrl + L</td>
+<td>現在のカーソル位置を中央に表示</td>
+</tr>
+<tr><td>Shift + ↑/↓/←/→</td>
+<td>範囲選択</td>
+</tr>
+<tr><td>Ctrl + Shift + ↑/↓</td>
+<td>スクロールしながら範囲選択</td>
+</tr>
+<tr><td>Ctrl + A</td>
+<td>文書全体を選択</td>
+</tr>
+<tr><td>Return</td>
+<td>改行とオートインデント</td>
+</tr>
+<tr><td>Tab</td>
+<td>インデントかTab文字の挿入</td>
+</tr>
+<tr><td>Shift + Tab</td>
+<td>アンインデントかTab単位の左移動</td>
+</tr>
+<tr><td>Delete</td>
+<td>右の文字を削除</td>
+</tr>
+<tr><td>BackSpace</td>
+<td>左の文字を削除</td>
+</tr>
+<tr><td>Ctrl + D</td>
+<td>右の文字を削除</td>
+</tr>
+<tr><td>Ctrl + H</td>
+<td>左の文字を削除</td>
+</tr>
+<tr><td>Ctrl + Delete</td>
+<td>右の単語を削除</td>
+</tr>
+<tr><td>Ctrl + BackSpace</td>
+<td>左の単語を削除</td>
+</tr>
+<tr><td>Ctrl + K</td>
+<td>行末まで削除</td>
+</tr>
+<tr><td>Ctrl + C</td>
+<td>コピー</td>
+</tr>
+<tr><td>Ctrl + X</td>
+<td>切り取り</td>
+</tr>
+<tr><td>Ctrl + V</td>
+<td>貼り付け</td>
+</tr>
+<tr><td>Ctrl + Z</td>
+<td>元に戻す</td>
+</tr>
+<tr><td>Ctrl + Y</td>
+<td>やり直し</td>
+</tr>
+<tr><td>Ctrl + N</td>
+<td>次を検索</td>
+</tr>
+<tr><td>Ctrl + Shift + N</td>
+<td>前を検索</td>
+</tr>
+<tr><td>Ctrl + B</td>
+<td>対応括弧へ移動</td>
+</tr>
+<tr><td>Ctrl + Shift + B</td>
+<td>対応括弧まで範囲選択</td>
+</tr>
+<tr><td>Ctrl + Space</td>
+<td>補完リストの表示</td>
+</tr>
+<tr><td>Ctrl + M</td>
+<td>ブックマーク1の設定/解除</td>
+</tr>
+<tr><td>Ctrl + Alt + ←/→</td>
+<td>左右のペイン分割位置を移動</td>
+</tr>
+<tr><td>Ctrl + Alt + ↑/↓</td>
+<td>上下のペイン分割位置を移動</td>
+</tr>
+<tr><td>Shift + Escape</td>
+<td>バックグラウンド処理をキャンセル</td>
+</tr>
+<tr><td>Ctrl + Minus</td>
+<td>左右のペイン分割位置をセンタリング</td>
+</tr>
+<tr><td>Ctrl + Shift + Minus</td>
+<td>アクティブなペインを最大化</td>
+</tr>
+<tr><td>Ctrl + F4</td>
+<td>文書を閉じる</td>
+</tr>
+<tr><td>Ctrl + Q</td>
+<td>文書を閉じる</td>
+</tr>
+<tr><td>Alt + F4</td>
+<td>終了する</td>
+</tr>
+<tr><td>Ctrl + Tab</td>
+<td>次の文書をアクティブにする</td>
+</tr>
+<tr><td>Ctrl + O</td>
+<td>ファイルを開く</td>
+</tr>
+<tr><td>Ctrl + S</td>
+<td>ファイルを保存する</td>
+</tr>
+<tr><td>Ctrl + J</td>
+<td>行番号またはシンボル名を入力してジャンプする</td>
+</tr>
+<tr><td>Ctrl + F</td>
+<td>検索する</td>
+</tr>
+<tr><td>Ctrl + R</td>
+<td>置換する</td>
+</tr>
+<tr><td>Ctrl + Shjft + F</td>
+<td>Grepする</td>
+</tr>
+<tr><td>F4</td>
+<td>シンボル定義位置へジャンプ</td>
+</tr>
+<tr><td>Shift + F4</td>
+<td>シンボルジャンプの履歴を戻る</td>
+</tr>
+<tr><td>F11</td>
+<td>ジャンプリストの次へ</td>
+</tr>
+<tr><td>Shift + F11</td>
+<td>ジャンプリストの前へ</td>
+</tr>
+<tr><td>Alt + X</td>
+<td>コマンドラインを開く</td>
+</tr>
+<tr><td>Ctrl + E</td>
+<td>拡張メニューの表示</td>
+</tr>
+<tr><td>Ctrl + E  Ctrl + W</td>
+<td>１画面モードと２画面モードを切り替える</td>
+</tr>
+<tr><td>Ctrl + E  Ctrl + D</td>
+<td>文書の一覧を表示する</td>
+</tr>
+<tr><td>Ctrl + E  Ctrl + P</td>
+<td>プロジェクト中のファイル一覧を表示する</td>
+</tr>
+<tr><td>Ctrl + E  Ctrl + H</td>
+<td>最近開いたファイルの一覧を表示する</td>
+</tr>
+<tr><td>Ctrl + E  Ctrl + M</td>
+<td>ブックマーク一覧を表示する</td>
+</tr>
+<tr><td>Ctrl + E  Ctrl + O</td>
+<td>アウトライン解析してシンボル一覧を表示する</td>
+</tr>
+<tr><td>Ctrl + E  Ctrl + R</td>
+<td>アウトライン解析してシンボル一覧を表示する</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+</blockquote>
+</div>
+<div class="section" id="id14">
+<h2><a class="toc-backref" href="#id66">マウス操作</a></h2>
+<blockquote>
+<p>このソフトウェアは、ほとんどキーボードを使って操作しますが、
+少しだけマウスで操作することが出来ます。</p>
+<blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="55%" />
+<col width="45%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">マウス操作</th>
+<th class="head">解説</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>ファイルをドロップ</td>
+<td>ファイルを開く</td>
+</tr>
+<tr><td>左クリック</td>
+<td>カーソルの移動</td>
+</tr>
+<tr><td>左ドラッグ</td>
+<td>範囲選択</td>
+</tr>
+<tr><td>Shift + 左クリック</td>
+<td>範囲選択</td>
+</tr>
+<tr><td>Alt + 左ドラッグ</td>
+<td>矩形選択</td>
+</tr>
+<tr><td>左ダブルクリック</td>
+<td>単語選択</td>
+</tr>
+<tr><td>左ダブルクリックからドラッグ</td>
+<td>単語単位の範囲選択</td>
+</tr>
+<tr><td>行番号部分を左クリック</td>
+<td>行選択</td>
+</tr>
+<tr><td>行番号部分を左ドラッグ</td>
+<td>行単位の範囲選択</td>
+</tr>
+<tr><td>行番号部分をShift + 左クリック</td>
+<td>行単位の範囲選択</td>
+</tr>
+<tr><td>ホイール回転</td>
+<td>スクロール</td>
+</tr>
+<tr><td>タブバーを左クリック</td>
+<td>文書の切り替え</td>
+</tr>
+<tr><td>縦のスプリッタのドラッグ</td>
+<td>左右の分割位置の移動</td>
+</tr>
+<tr><td>横のスプリッタのドラッグ</td>
+<td>上下の分割位置の移動</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+</blockquote>
+</div>
+<div class="section" id="id15">
+<h2><a class="toc-backref" href="#id67">ファイルのオープン</a></h2>
+<blockquote>
+<p>LREdit でファイルを開く方法はいくつかあります。</p>
+<ul class="simple">
+<li>メニューバーの [ファイル] &gt; [開く] からファイル名を入力する</li>
+<li>Ctrl + O で ファイル名を入力する</li>
+<li>Alt + X で ファイル名を入力する</li>
+<li>Alt + X で Open コマンドにファイル名を渡す (例: Open;c:/aaa/bbb.txt )</li>
+<li>ファイルを LREdit のウインドウに Drag &amp; Drop する</li>
+<li>ファイルを LREdit のアイコンに Drag &amp; Drop する</li>
+<li>LREdit の起動引数にファイル名を渡す</li>
+</ul>
+</blockquote>
+</div>
+<div class="section" id="id16">
+<h2><a class="toc-backref" href="#id68">最近開いたファイルのオープン</a></h2>
+<blockquote>
+<p>最近開いたファイルは履歴に残っています。履歴からファイルを再度開くことができます。</p>
+<ul class="simple">
+<li>メニューバーの [ファイル] &gt; [最近のファイル] から選択する</li>
+<li>Ctrl + E  Ctrl + H で最近開いたファイルのリストを表示する。</li>
+<li>RecentFileList コマンドで最近開いたファイルのリストを表示する。</li>
+<li>Ctrl + O で ファイル名を入力する際に表示される補完候補を利用する。</li>
+</ul>
+<p>最近開いたファイルリストのウインドウでは、以下のキーが使用できます。</p>
+<blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="33%" />
+<col width="67%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">キー</th>
+<th class="head">解説</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>↑/↓</td>
+<td>選択</td>
+</tr>
+<tr><td>Enter</td>
+<td>決定</td>
+</tr>
+<tr><td>Escape</td>
+<td>中断</td>
+</tr>
+<tr><td>F</td>
+<td>インクリメンタルサーチの開始</td>
+</tr>
+<tr><td>Space</td>
+<td>フルパス表示のOn/Off</td>
+</tr>
+<tr><td>Delete</td>
+<td>削除</td>
+</tr>
+<tr><td>←/→</td>
+<td>プロジェクトファイルモードの切り替え</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+</blockquote>
+</div>
+<div class="section" id="id17">
+<h2><a class="toc-backref" href="#id69">ドキュメントの切り替え</a></h2>
+<blockquote>
+<p>LREdit は複数のドキュメントを同時に開くことができます。以下のようにして
+ドキュメントを切り替えることができます。</p>
+<ul class="simple">
+<li>メニューバーの [表示] &gt; [文書選択] で、ドキュメントリストを表示する。</li>
+<li>タブバーのタブをクリックする。</li>
+<li>Alt + X で ファイル名を入力する</li>
+<li>Alt + X で DocumentList コマンドを実行して、ドキュメントリストを表示する。</li>
+<li>Alt + X で Document コマンドを実行し、ドキュメント名を入力する。</li>
+<li>Ctrl + TAB を押して順番に切り替える。</li>
+</ul>
+<p>ドキュメントリストのウインドウでは、以下のキーが使用できます。</p>
+<blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="36%" />
+<col width="64%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">キー</th>
+<th class="head">解説</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>↑/↓</td>
+<td>選択</td>
+</tr>
+<tr><td>Enter</td>
+<td>決定</td>
+</tr>
+<tr><td>Escape</td>
+<td>中断</td>
+</tr>
+<tr><td>F</td>
+<td>インクリメンタルサーチの開始</td>
+</tr>
+<tr><td>Space</td>
+<td>フルパス表示のOn/Off</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+</blockquote>
+</div>
+<div class="section" id="id18">
+<h2><a class="toc-backref" href="#id70">ブックマーク機能</a></h2>
+<blockquote>
+<p>LREdit には、作業している箇所に目印をつけるための、ブックマーク機能が備わっています。
+ブックマークは、任意のテキストファイルの、任意の行に設定することができ、LREdit を終了した後も
+保存されています。</p>
+<p>以下のようにしてブックマークを設定することができます。</p>
+<ul class="simple">
+<li>メニューバーの [ツール] &gt; [ブックマーク1]/[ブックマーク2]/[ブックマーク3]</li>
+<li>Ctrl + M</li>
+<li>Alt + X から [Bookmark1]/[Bookmark2]/[Bookmark3]/[Bookmark123] コマンドを実行</li>
+</ul>
+<p>また、以下のようにしてブックマークを一覧することができます。</p>
+<ul class="simple">
+<li>メニューバーの [ツール] &gt; [ブックマーク一覧]</li>
+<li>Ctrl + E  Ctrl + M</li>
+<li>Alt + X から [BookmarkList] コマンドを実行</li>
+</ul>
+<p>ブックマーク一覧ウインドウでは、以下のキーが使用できます。</p>
+<blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="29%" />
+<col width="71%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">キー</th>
+<th class="head">解説</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>↑/↓</td>
+<td>選択</td>
+</tr>
+<tr><td>Enter</td>
+<td>決定</td>
+</tr>
+<tr><td>Escape</td>
+<td>中断</td>
+</tr>
+<tr><td>F</td>
+<td>インクリメンタルサーチの開始</td>
+</tr>
+<tr><td>Space</td>
+<td>フルパス表示のOn/Off</td>
+</tr>
+<tr><td>Delete</td>
+<td>削除</td>
+</tr>
+<tr><td>←/→</td>
+<td>ローカルモードとグローバルモードの切り替え</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+<p>ブックマークの一覧表示には、ローカルとグローバルの2つのモードがあります。
+ローカルモードでは、オープンされているファイル、および現在のプロジェクトに登録されているファイルのブックマークだけが表示されます。
+グローバルモードでは、LREditが保存している全てのブックマークが表示されます。</p>
+</blockquote>
+</div>
+<div class="section" id="id19">
+<h2><a class="toc-backref" href="#id71">２画面モード</a></h2>
+<blockquote>
+<p>LREdit は、左右に２つのテキスト編集領域を開くことができます。これを２画面モードと
+呼びます。</p>
+<p>１画面モードと２画面モードを切り替えるには、次のように行います。</p>
+<ul class="simple">
+<li>メニューバーの [表示] &gt; [他方のペイン] を選択する</li>
+<li>コマンドラインから AnotherPane を実行する</li>
+<li>Ctrl + E  Ctrl + W を入力する</li>
+</ul>
+<p>また、メニューバーの [検索] &gt; [比較] などから、ファイルの比較を実行すると、
+自動的に２画面モードに変更されます。</p>
+<p>２画面モード中に [表示] &gt; [他方のペイン] や AnotherPane を実行すると、
+アクティブなタブがもう片方の編集ペインに移動します。</p>
+<p>片方のペインの全てのタブを閉じると、自動的に１画面モードに戻ります。</p>
+<p>２画面モードで、Ctrl + TAB を押すと、左右のペインの間でフォーカス切り替えを行います。
+Ctrl キーを押したまま、連続で Ctrl + TAB を押すと、タブの切り替えを行います。</p>
+</blockquote>
+</div>
+<div class="section" id="id20">
+<h2><a class="toc-backref" href="#id72">コマンドライン</a></h2>
+<blockquote>
+<p>コマンドラインは、いくつかの目的で使用します。</p>
+<ul class="simple">
+<li>コマンド名を入力してコマンドの実行</li>
+<li>ファイル名を入力してファイルのオープン</li>
+<li>ドキュメント名を入力してドキュメントの切り替え</li>
+<li>モード名を入力して、モードの切り替え</li>
+<li>コマンド実行時のインタラクティブなパラメタの入力</li>
+<li>テキスト入力式の計算機</li>
+</ul>
+</blockquote>
+<div class="section" id="id21">
+<h3><a class="toc-backref" href="#id73">コマンドラインの操作方法</a></h3>
+<blockquote>
+<p>コマンドラインの入力は自動補完され、数少ないキー入力で目的の文字列を入力することが出来ます。</p>
+<blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="31%" />
+<col width="69%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">キー</th>
+<th class="head">解説</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>Tab</td>
+<td>補完</td>
+</tr>
+<tr><td>↑/↓</td>
+<td>補完候補の選択</td>
+</tr>
+<tr><td>セミコロン</td>
+<td>選択範囲の確定またはセミコロンの入力</td>
+</tr>
+<tr><td>ピリオド</td>
+<td>選択範囲の確定またはピリオドの入力</td>
+</tr>
+<tr><td>スラッシュ</td>
+<td>選択範囲の確定またはスラッシュの入力</td>
+</tr>
+<tr><td>バックスラッシュ</td>
+<td>選択範囲の確定またはバックスラッシュの入力</td>
+</tr>
+<tr><td>その他の文字入力</td>
+<td>文字入力</td>
+</tr>
+<tr><td>Enter</td>
+<td>入力の決定</td>
+</tr>
+<tr><td>Escape</td>
+<td>入力の中断</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+</blockquote>
+</div>
+<div class="section" id="id22">
+<h3><a class="toc-backref" href="#id74">コマンド実行機能</a></h3>
+<blockquote>
+<p>コマンドを入力して、さまざまなアクションを実行する機能です。</p>
+<p><strong>主なコマンドの一覧</strong></p>
+<blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="39%" />
+<col width="61%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">コマンド名</th>
+<th class="head">解説</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>New</td>
+<td>新しいファイルを開く</td>
+</tr>
+<tr><td>Open</td>
+<td>ファイルを開く</td>
+</tr>
+<tr><td>Save</td>
+<td>ファイルを保存する</td>
+</tr>
+<tr><td>SaveAs</td>
+<td>ファイルを名前をつけて保存する</td>
+</tr>
+<tr><td>SaveAll</td>
+<td>開いているすべてのファイルを保存する</td>
+</tr>
+<tr><td>Close</td>
+<td>ファイルを閉じる</td>
+</tr>
+<tr><td>Duplicate</td>
+<td>ファイルをもうひとつの編集ペインで開く</td>
+</tr>
+<tr><td>AnotherPane</td>
+<td>ファイルをもう一つの編集ペインに移動する</td>
+</tr>
+<tr><td>Mode</td>
+<td>モードを変更する</td>
+</tr>
+<tr><td>MinorMode</td>
+<td>マイナーモードをOn/Offする</td>
+</tr>
+<tr><td>Search</td>
+<td>検索する</td>
+</tr>
+<tr><td>Replace</td>
+<td>置換する</td>
+</tr>
+<tr><td>Compare</td>
+<td>ファイルを比較する</td>
+</tr>
+<tr><td>CompareOptions</td>
+<td>ファイル比較時のオプションを設定する</td>
+</tr>
+<tr><td>Grep</td>
+<td>複数のファイルから検索する</td>
+</tr>
+<tr><td>Jump</td>
+<td>行番号またはシンボル名を入力してジャンプする</td>
+</tr>
+<tr><td>JumpLineNo</td>
+<td>行番号を入力してジャンプする</td>
+</tr>
+<tr><td>SelectBlock</td>
+<td>矩形選択モードを有効にする</td>
+</tr>
+<tr><td>RemoveTrailingSpace</td>
+<td>選択範囲の行末スペースを削除する</td>
+</tr>
+<tr><td>ExpandTab</td>
+<td>選択範囲のTab文字をスペース文字に展開する</td>
+</tr>
+<tr><td>RemoveEmptyLines</td>
+<td>選択範囲の空行を削除する</td>
+</tr>
+<tr><td>RemoveMarkedLines</td>
+<td>選択範囲のぼっくマークされた行を削除する</td>
+</tr>
+<tr><td>RemoveUnmarkedLines</td>
+<td>選択範囲のぼっくマークされてない行を削除する</td>
+</tr>
+<tr><td>ToUpper</td>
+<td>選択範囲を大文字に変換する</td>
+</tr>
+<tr><td>ToLower</td>
+<td>選択範囲を小文字に変換する</td>
+</tr>
+<tr><td>ToZenkaku</td>
+<td>選択範囲の指定した文字種に関して全角文字に変換する</td>
+</tr>
+<tr><td>ToHankaku</td>
+<td>選択範囲の指定した文字種に関して半角文字に変換する</td>
+</tr>
+<tr><td>ConfigMenu</td>
+<td>設定メニューを開く</td>
+</tr>
+<tr><td>EditConfig</td>
+<td>config.py を開く</td>
+</tr>
+<tr><td>ReloadConfig</td>
+<td>config.py をリロードする</td>
+</tr>
+<tr><td>Wallpaper</td>
+<td>画像のファイル名を入力し壁紙に設定する</td>
+</tr>
+<tr><td>About</td>
+<td>バージョン情報をログペインに出力する</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+<p>Open や Mode など、いくつかのコマンドは、コマンドラインから引数を受け取ることができます。
+引数は、以下のようにセミコロンで区切って渡します。</p>
+<div class="highlight"><pre>Open;c:/project/foo/bar.txt
+</pre></div>
+<p>引数を渡さなかった場合は、インタラクティブにパラメタを入力します。</p>
+<div class="highlight"><pre>Open
+c:/project/foo/bar.txt
+</pre></div>
+<p>LREditには他にもたくさんコマンドがあります。 Alt + X でコマンドラインを開き、
+何も入力しない状態で Tab キーを押すと、使用可能なすべてのコマンドがリストアップ
+されます。コマンドの詳細については APIリファレンス を参照してください。</p>
+</blockquote>
+</div>
+<div class="section" id="id23">
+<h3><a class="toc-backref" href="#id75">ファイルオープン機能</a></h3>
+<blockquote>
+<p>ファイル名を入力して、ファイルをオープンする機能です。
+Open コマンドの動作と同等です。</p>
+<div class="highlight"><pre>c:/project/foo/bar.txt
+</pre></div>
+<p>セミコロンで区切って、複数のファイルをオープンすることもできます。</p>
+<div class="highlight"><pre>c:/project/foo1.txt;c:/project/foo2.txt
+</pre></div>
+<p>コマンド名と同様に、ファイル名も自動補完されます。</p>
+</blockquote>
+</div>
+<div class="section" id="id24">
+<h3><a class="toc-backref" href="#id76">ドキュメント切り替え機能</a></h3>
+<blockquote>
+<p>ドキュメント名を入力して、ドキュメントアクティブ化する機能です。
+Document コマンドの動作と同等です。</p>
+<div class="highlight"><pre>bar.txt
+</pre></div>
+<p>コマンド名と同様に、ドキュメント名も自動補完されます。</p>
+</blockquote>
+</div>
+<div class="section" id="id25">
+<h3><a class="toc-backref" href="#id77">テキスト入力式の計算機</a></h3>
+<blockquote>
+<p>数式を解釈して結果を表示するおまけ機能です。</p>
+<p>整数と浮動少数を扱うことが出来ます。</p>
+<p>数式の中で以下の関数や定数を使用することが出来ます。:</p>
+<pre class="literal-block">
+sin, cos, tan, acos, asin, atan, e, fabs, log, log10, pi, pow, sqrt
+</pre>
+<p>複数回 Enterキーを押すことで、10進と16進で結果を切り替えて表示することが出来ます。</p>
+<div class="highlight"><pre>12+34+45 =&gt; 91
+
+12*34+45 =&gt; 453
+
+12*(34+45) =&gt; 948
+
+log(10) =&gt; 2.302585
+</pre></div>
+</blockquote>
+</div>
+</div>
+<div class="section" id="id26">
+<h2><a class="toc-backref" href="#id78">検索/置換</a></h2>
+<div class="section" id="id27">
+<h3><a class="toc-backref" href="#id79">検索</a></h3>
+<blockquote>
+<p>文書の中で特定の文字列を検索することができます。</p>
+<p>下のいずれかの操作を行うと、コマンドラインに検索条件を入力する状態になります。</p>
+<ul class="simple">
+<li>メニューバーの [検索] &gt; [検索] を選択する</li>
+<li>Ctrl + F を押す</li>
+</ul>
+<p>検索条件には、検索文字列、単語単位で検索をするか、大文字小文字を区別するか、
+正規表現を使用するか、を設定します。</p>
+<blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="36%" />
+<col width="64%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">キー</th>
+<th class="head">解説</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>Return</td>
+<td>検索の実行</td>
+</tr>
+<tr><td>Escape</td>
+<td>検索のキャンセル</td>
+</tr>
+<tr><td>Ctrl + ↑</td>
+<td>前を検索</td>
+</tr>
+<tr><td>Ctrl + ↓</td>
+<td>次を検索</td>
+</tr>
+<tr><td>Ctrl + W</td>
+<td>単語単位での検索をOn/Off</td>
+</tr>
+<tr><td>Ctrl + E</td>
+<td>大文字小文字の区別をOn/Off</td>
+</tr>
+<tr><td>Ctrl + R</td>
+<td>正規表現をOn/Off</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+<p>テキスト編集領域の、検索条件に一致する部分には、アンダーラインが表示されます。</p>
+<p>検索を行ったあと、同じ条件で、次の位置または前の位置を検索することができます。</p>
+<blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="36%" />
+<col width="64%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">キーまたはメニュー</th>
+<th class="head">解説</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>Ctrl + N</td>
+<td>次を検索</td>
+</tr>
+<tr><td>Ctrl + Shift + N</td>
+<td>前を検索</td>
+</tr>
+<tr><td>[検索]&gt;[次を検索]</td>
+<td>次を検索</td>
+</tr>
+<tr><td>[検索]&gt;[前を検索]</td>
+<td>前を検索</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+<p>正規表現の書式については、下記を参照してください。</p>
+<blockquote>
+<a class="reference external" href="http://www.python.jp/doc/2.5/lib/re-syntax.html">Python ライブラリリファレンス 正規表現のシンタクス</a></blockquote>
+</blockquote>
+</div>
+<div class="section" id="id28">
+<h3><a class="toc-backref" href="#id80">置換</a></h3>
+<blockquote>
+<p>文書の中の、指定したパターンの文字列を、別の文字列に置き換えることができます。</p>
+<p>下のいずれかの操作を行うと、コマンドラインに検索条件を入力する状態になります。</p>
+<ul class="simple">
+<li>メニューバーの [検索] &gt; [置換] を選択する</li>
+<li>Ctrl + R を押す</li>
+</ul>
+<p>検索と同様に、置換に関しても、正規表現などの条件を使用することができます。</p>
+<p>検索条件を入力した後、次に置換後の文字列を入力すると、置換が一箇所ずつ実行されます。</p>
+<blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="36%" />
+<col width="64%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">キー</th>
+<th class="head">解説</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>Return</td>
+<td>置換の実行</td>
+</tr>
+<tr><td>Escape</td>
+<td>置換の中断</td>
+</tr>
+<tr><td>Ctrl + ↑</td>
+<td>前を検索</td>
+</tr>
+<tr><td>Ctrl + ↓</td>
+<td>次を検索</td>
+</tr>
+<tr><td>Shift + Return</td>
+<td>ファイルの末尾まで全て置換</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+<p>検索条件に正規表現のグループが使われている場合、置換後の文字列にヒットした文字列の一部を再利用することができます。</p>
+<blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="36%" />
+<col width="64%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">置換後文字列</th>
+<th class="head">解説</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>\0</td>
+<td>ヒットした文字列全体</td>
+</tr>
+<tr><td>\1～\9</td>
+<td>グループ0 から グループ9</td>
+</tr>
+<tr><td>\t</td>
+<td>TAB文字</td>
+</tr>
+<tr><td>\n</td>
+<td>改行</td>
+</tr>
+<tr><td>\ \</td>
+<td>\ 自身</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+<p>正規表現のグループについては、下記を参照してください。</p>
+<blockquote>
+<a class="reference external" href="http://www.python.jp/doc/2.5/lib/re-syntax.html">Python ライブラリリファレンス 正規表現のシンタクス</a></blockquote>
+</blockquote>
+</div>
+<div class="section" id="grep">
+<h3><a class="toc-backref" href="#id81">Grep</a></h3>
+<blockquote>
+<p>LREditは、Grep機能を内蔵しています。Grepは、複数のファイルの中から文字列を検索する機能です。</p>
+<p>下のいずれかの操作を行うと、コマンドラインに検索条件を入力する状態になります。</p>
+<ul class="simple">
+<li>メニューバーの [検索] &gt; [ファイルから検索] を選択する</li>
+<li>Ctrl + Shift + F を押す</li>
+</ul>
+<p>以下の検索条件を順番に入力します。</p>
+<ul class="simple">
+<li>検索文字列</li>
+<li>ファイル名パターン</li>
+<li>検索対象</li>
+<li>検索ディレクトリ</li>
+<li>無視するディレクトリ名のパターン</li>
+</ul>
+<blockquote>
+<p>検索対象の入力時、以下のいくつかのタイプのうちから１つを入力することができます。</p>
+<blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="38%" />
+<col width="62%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">検索対象</th>
+<th class="head">解説</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>Directory</td>
+<td>指定したディレクトリのファイル</td>
+</tr>
+<tr><td>Directory.Recursive</td>
+<td>指定したディレクトリ以下のファイル</td>
+</tr>
+<tr><td>Project</td>
+<td>プロジェクト中のファイル全て</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+</blockquote>
+<p>検索するファイル名のパターンと、除外するディレクトリ名のパターンでは、* と ? を
+のようなワイルドカードを使用することができます。また複数のパターンをスペース文字で区切って
+指定することができます。</p>
+<div class="highlight"><pre>*
+*.cpp *.c *.h makefile
+.svn CVS RCS
+</pre></div>
+<p>またファイル名パターンに関しては ! を使って除外するパターンを指定することができます。</p>
+<div class="highlight"><pre>* !*.obj !*.exe !tags
+</pre></div>
+<p>検索条件を全て入力し終わる前に、Ctrl を押しながら Return を押して決定すると、
+後続の条件の入力を省略し、前回の条件を利用して検索を開始することができます。</p>
+<p>検索は、バックグラウンドで実行され、テキストの編集作業を中断することなく実行されます。
+検索にヒットした位置は、ログペインに出力されます。</p>
+<p>検索結果へは、以下のようにしてジャンプすることができます。</p>
+<blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="36%" />
+<col width="64%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">キーまたはメニュー</th>
+<th class="head">解説</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>F11</td>
+<td>ジャンプリストの次へ</td>
+</tr>
+<tr><td>Shift + F11</td>
+<td>ジャンプリストの前へ</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+<p>検索処理を中断するには、Shift + Escape を押します。</p>
+</blockquote>
+</div>
+<div class="section" id="id30">
+<h3><a class="toc-backref" href="#id82">比較</a></h3>
+<blockquote>
+<p>LREdit は ２つのファイルの内容を比較して、差分を色付けして表示することができます。</p>
+<ul class="simple">
+<li>メニューバーの [検索] &gt; [比較] を選択する</li>
+<li>コマンドラインから Compare コマンドを実行する</li>
+</ul>
+<p>すでに２画面モードならば、左右の文書を比較します。</p>
+<p>１画面モードならば、コマンドラインで比較対象のファイルを指定します。</p>
+<p>以下のようにして、差分位置へジャンプすることができます。</p>
+<blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="36%" />
+<col width="64%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">キーまたはメニュー</th>
+<th class="head">解説</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>F11</td>
+<td>ジャンプリストの次へ</td>
+</tr>
+<tr><td>Shift + F11</td>
+<td>ジャンプリストの前へ</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+<p>CompareOptions コマンドを呼び出すことで、ファイル比較時のオプションを設定することができます。</p>
+<blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="36%" />
+<col width="64%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">設定値</th>
+<th class="head">解説</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>Strict</td>
+<td>厳密に比較する</td>
+</tr>
+<tr><td>Ignore.Case</td>
+<td>大文字小文字の違いを無視する</td>
+</tr>
+<tr><td>Ignore.WhiteSpace</td>
+<td>空白文字の変化を無視して比較する</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+<p>オプションは、カンマで区切って、複数指定することができます。</p>
+</blockquote>
+</div>
+</div>
+<div class="section" id="id31">
+<h2><a class="toc-backref" href="#id83">単語補完</a></h2>
+<blockquote>
+<p>LREdit は、テキストの入力を効率的に行うための、補完機能を持っています。
+LREdit で現在オープンしている全てのテキストファイル中の単語を使って、
+補完入力が行われます。</p>
+<p>たとえば、</p>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">Hello</span><span class="p">():</span>
+    <span class="k">print</span><span class="p">(</span> <span class="s">&quot;He</span>
+</pre></div>
+<p>このように He まで入力したところで、Ctrl-Space を押すと、</p>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">Hello</span><span class="p">():</span>
+    <span class="k">print</span><span class="p">(</span> <span class="s">&quot;Hello</span>
+</pre></div>
+<p>のように、Hello と補完されます。</p>
+<blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="36%" />
+<col width="64%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">キー</th>
+<th class="head">解説</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>Ctrl + Space</td>
+<td>補完の実行</td>
+</tr>
+<tr><td>↑/↓</td>
+<td>補完候補の選択</td>
+</tr>
+<tr><td>Tab</td>
+<td>補完候補の共通部分まで確定</td>
+</tr>
+<tr><td>Return</td>
+<td>補完候補の決定</td>
+</tr>
+<tr><td>Escape</td>
+<td>補完候補リストのキャンセル</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+</blockquote>
+</div>
+<div class="section" id="id32">
+<h2><a class="toc-backref" href="#id84">矩形選択</a></h2>
+<blockquote>
+<p>LREdit は、通常のテキスト選択に加えて、矩形選択モードをサポートしています。
+矩形選択モードでは、下の図のように、矩形で囲まれる範囲を選択することができます。</p>
+<img alt="image/screenshot_block.png" src="image/screenshot_block.png" />
+<p>下のいずれかの操作を行うと、矩形選択モードになります。</p>
+<ul class="simple">
+<li>Alt を押しながら左ドラッグ</li>
+<li>SelectBlock コマンドを実行</li>
+</ul>
+<p>矩形選択状態で、Ctrl-C や Ctrl-X を押すと、その矩形範囲に対して、コピーやカットの操作を行います。
+また、矩形モードでクリップボードに格納したテキストを、Ctrl-V で貼り付けると、矩形モードでの貼り付けが行われます。</p>
+<blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="30%" />
+<col width="70%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">キー</th>
+<th class="head">解説</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>Ctrl + C</td>
+<td>矩形範囲のテキストをコピー</td>
+</tr>
+<tr><td>Ctrl + X</td>
+<td>矩形範囲のテキストを切り取り</td>
+</tr>
+<tr><td>Ctrl + V</td>
+<td>矩形範囲のテキストを上書きして貼り付け</td>
+</tr>
+<tr><td>Shift + ↑/↓/←/→</td>
+<td>矩形モードのまま範囲選択</td>
+</tr>
+<tr><td>Delete/BackSpace</td>
+<td>矩形範囲を削除</td>
+</tr>
+<tr><td>Escape</td>
+<td>範囲選択の解除</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+</blockquote>
+</div>
+<div class="section" id="id33">
+<h2><a class="toc-backref" href="#id85">プロジェクト</a></h2>
+<blockquote>
+<p>LREdit では、編集作業や開発プロジェクトに関係のあるファイルだけを、 <strong>プロジェクトファイル</strong> としてまとめておき、
+作業を効率化することができます。プロジェクトファイルの拡張子は [ *.lre ] です。</p>
+<p>LREdit のプロジェクトファイルは、単に行区切りでファイル名を列挙したテキストファイルです。
+プロジェクトの編集は、テキストエディタで行います。</p>
+<p>メニューバーの [ファイル] &gt; [プロジェクト] &gt; [開く] を選択し、プロジェクトファイルの名前を入力すると、そのプロジェクトファイルをロードすることができます。</p>
+<p>メニューバーの [ファイル] &gt; [ファイル一覧] を選択するか、Ctrl + Shift + O を入力すると、プロジェクトファイル中のファイルリストが表示されます。</p>
+<p>使用中のプロジェクトファイルを、任意のテキストエディタで編集すると、自動的にリロードされます。
+メニューバーの [ファイル] &gt; [プロジェクト] &gt; [編集] を選択すると、LREdit 自身でプロジェクトファイルを編集することができます。</p>
+</blockquote>
+</div>
+</div>
+<div class="section" id="id34">
+<h1><a class="toc-backref" href="#id86">高度な使い方</a></h1>
+<div class="section" id="id35">
+<h2><a class="toc-backref" href="#id87">拡張メニュー/マルチストロークキーバインド</a></h2>
+<blockquote>
+<p>Ctrl + E には、拡張メニューが割り当てられています。
+拡張メニューは、アクティブなテキスト編集領域のカーソル付近に表示されます。</p>
+<p>拡張メニューには config.py で項目を追加することができますが、デフォルトでは以下の項目が
+登録されています。</p>
+<blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="22%" />
+<col width="26%" />
+<col width="53%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">項目</th>
+<th class="head">キー</th>
+<th class="head">解説</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>画面モード</td>
+<td>Ctrl + W</td>
+<td>１画面モードと２画面モードを切り替える</td>
+</tr>
+<tr><td>文書リスト</td>
+<td>Ctrl + D</td>
+<td>文書の一覧を表示する</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+<p>LREditでは、この拡張メニューがマルチストロークなキーバインドを実現するためにも使われます。
+マルチストロークなキーバインドとは、Emacs や Xyzzy での  [ Ctrl+X  Ctrl-F ] のような、
+複数の連続したキー入力にアクションを割り当てることです。</p>
+<p>たとえば、[ Ctrl+E  Ctrl+W ] と入力すると、画面モードの切り替えが行われます。
+もちろん、↑↓キーでメニュー項目を選択し、Return で決定することも可能です。</p>
+</blockquote>
+</div>
+<div class="section" id="id36">
+<h2><a class="toc-backref" href="#id88">文字エンコーディング</a></h2>
+<blockquote>
+<p>エンコーディングは、ファイルをオープンしたときに自動的に認識されます。</p>
+<p>編集中の文書がどのエンコーディングでオープンされているかは、フッタ領域に [utf-8] のように表示されます。</p>
+<p>自動的なエンコーディングの認識は、大抵の場合はうまく動作しますが、多バイト文字の分量が
+少ない場合などは、期待したエンコーディングとして認識されないケースもあります。</p>
+<p>そのような場合は、以下の操作を行うと、エンコーディングを明示してファイルを開きなおす
+ことができます。</p>
+<ul class="simple">
+<li>メニューバーの [ファイル] &gt; [開き直す] 以下の項目を選択する</li>
+<li>コマンドラインから ReopenEncoding コマンドを実行する</li>
+</ul>
+<p>また、別のエンコーディングに変更して保存する場合は以下の操作を行います。</p>
+<ul class="simple">
+<li>メニューバーの [ファイル] &gt; [エンコーディング] 以下の項目を選択する</li>
+<li>コマンドラインから Encoding コマンドを実行する</li>
+</ul>
+<p>フッタ領域のエンコーディングの表示が変化するはずです。このあとファイルを保存すると、実際に
+指定したエンコーディングでファイルが保存されます。</p>
+</blockquote>
+</div>
+<div class="section" id="id37">
+<h2><a class="toc-backref" href="#id89">改行コード</a></h2>
+<blockquote>
+<p>LREdit は CR-LF, LF, CR の３つのタイプの改行コードをサポートしています。</p>
+<p>編集中の文書がどの改行コードを使用しているかは、フッタ領域に [xxxx:crlf] のように表示されます。</p>
+<p>別の改行コードに変更する場合は以下の操作を行います。</p>
+<ul class="simple">
+<li>メニューバーの [ファイル] &gt; [エンコーディング] 以下の項目を選択する</li>
+<li>コマンドラインから LineEnd コマンドを実行する</li>
+</ul>
+<p>フッタ領域の改行コードの表示が変化するはずです。このあとファイルを保存すると、実際に
+指定した改行コードでファイルが保存されます。</p>
+</blockquote>
+</div>
+<div class="section" id="id38">
+<h2><a class="toc-backref" href="#id90">シンボル検索</a></h2>
+<blockquote>
+<p>ソースコード中のクラスや関数などのシンボルの定義位置を抽出し、ジャンプしたり
+リスト表示する機能です。</p>
+<p>シンボルの定義を抽出したファイルを、TAGS ファイルと呼びます。
+シンボル検索を行うには、前もって TAGS ファイルを生成しておく必要があります。</p>
+</blockquote>
+<div class="section" id="tags">
+<h3><a class="toc-backref" href="#id91">TAGSの生成</a></h3>
+<blockquote>
+<p>TAGSファイルを生成するには、プロジェクトファイルを読み込んだ状態で、以下のいずれかを実行します。</p>
+<ul class="simple">
+<li>メニューバーの [検索] &gt; [シンボル検索] &gt; [TAGSの生成] を選択する</li>
+<li>コマンドラインから GenerateTags コマンドを実行する</li>
+</ul>
+<p>TAGSファイルは、プロジェクトファイルに登録されているソースコードファイルから作られます。
+プロジェクトファイルの隣に tags という名前のファイルとして作られます。</p>
+<p>TAGSファイルの生成にはソースコードの分量によっては時間がかかる場合があります。</p>
+</blockquote>
+</div>
+<div class="section" id="id39">
+<h3><a class="toc-backref" href="#id92">シンボル定義位置へジャンプ</a></h3>
+<blockquote>
+<p>シンボルの定義位置へジャンプするには、定義位置ジャンプしたい単語にカーソルを合わせて、以下のいずれかを実行します。</p>
+<ul class="simple">
+<li>メニューバーの [検索] &gt; [シンボル検索] &gt; [定義位置へジャンプ] を選択する</li>
+<li>F4 キーを押す</li>
+<li>コマンドラインから TagsJump コマンドを実行する</li>
+</ul>
+<p>シンボルの定義位置の候補が複数ある場合は、候補がリスト表示されます。
+シンボル定義位置リストのウインドウでは、以下のキーが使用できます。</p>
+<blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="36%" />
+<col width="64%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">キー</th>
+<th class="head">解説</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>↑/↓</td>
+<td>選択</td>
+</tr>
+<tr><td>Enter</td>
+<td>決定</td>
+</tr>
+<tr><td>Escape</td>
+<td>中断</td>
+</tr>
+<tr><td>F</td>
+<td>インクリメンタルサーチの開始</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+<p>候補がひとつしかない場合は、即座にジャンプします。</p>
+</blockquote>
+</div>
+<div class="section" id="id40">
+<h3><a class="toc-backref" href="#id93">ジャンプ元の位置に戻る</a></h3>
+<blockquote>
+<p>シンボル定義位置へのジャンプの際、履歴が残されます。履歴を遡って、ジャンプ元の位置に戻るには、以下のいずれかを実行します。</p>
+<ul class="simple">
+<li>メニューバーの [検索] &gt; [シンボル検索] &gt; [ジャンプ元へ戻る] を選択する</li>
+<li>Shift + F4 キーを押す</li>
+<li>コマンドラインから TagsBack コマンドを実行する</li>
+</ul>
+</blockquote>
+</div>
+<div class="section" id="id41">
+<h3><a class="toc-backref" href="#id94">TAGSの読み込み</a></h3>
+<blockquote>
+<p>シンボルの定義位置へジャンプするとき、プロジェクトファイルの隣にある tags という名前のファイルが自動的に読み込まれます。</p>
+<p>プロジェクトと関係のないTAGSファイルを利用したい場合は、
+以下の方法で、TAGS ファイルを追加的にロードすることができます。</p>
+<ul class="simple">
+<li>メニューバーの [検索] &gt; [シンボル検索] &gt; [TAGSの読み込み] を選択する</li>
+<li>コマンドラインから LoadTags コマンドを実行する</li>
+</ul>
+<p>これは、ソースコードが、アプリケーションとライブラリといった複数のディレクトリ
+に分散している際に有用な方法です。</p>
+</blockquote>
+</div>
+</div>
+</div>
+<div class="section" id="id42">
+<h1><a class="toc-backref" href="#id95">カスタマイズ</a></h1>
+<blockquote>
+<p>LREdit は柔軟なカスタマイズが可能なテキストエディタです。
+あらかじめ設定メニューのなかに用意された項目を設定することである程度のカスタマイズが
+可能なほか、内蔵している Python を使って柔軟にカスタマイズや機能追加を
+行うことができます。</p>
+<p>以下のようなカスタマイズが可能です。</p>
+<blockquote>
+<p><strong>設定メニューを使ったカスタマイズ</strong></p>
+<ul class="simple">
+<li>フォントやフォントサイズ</li>
+<li>メニューバーのOn/Off</li>
+<li>表示言語</li>
+<li>壁紙やテーマ</li>
+</ul>
+<p><strong>Pythonを使ったカスタマイズ</strong></p>
+<ul class="simple">
+<li>キー割り当ての変更</li>
+<li>言語モードの追加</li>
+<li>マイナーモードの追加</li>
+<li>独自の編集操作を定義</li>
+<li>メニューバーに項目を追加</li>
+</ul>
+</blockquote>
+<p>Pythonを使ったカスタマイズには、ある程度のPythonの知識が必要となりますが、
+キー割り当ての変更程度であれば、Pythonの知識がなくても可能です。</p>
+</blockquote>
+<div class="section" id="config-py">
+<h2><a class="toc-backref" href="#id96">config.py</a></h2>
+<blockquote>
+<p>LREditの設定は、設定スクリプト config.py に記述します。
+config.pyは、拡張子が py であるのを見るとわかるとおり、Pythonスクリプトです。</p>
+<p>この文書では、config.py の編集方法の概要を説明します。より詳細なカスタマイズ方法
+については、APIリファレンス を参照してください。</p>
+<p><strong>config.pyを開く</strong></p>
+<blockquote>
+config.py を編集するには、メニューバーの [ツール] &gt; [config.pyの編集] を選択します。
+LREdit自身に config.py がオープンされます。config.pyの記述方法については後述します。</blockquote>
+<p><strong>config.pyを再読み込みする</strong></p>
+<blockquote>
+<p>config.py を編集した後、LREditに反映させるためには、LREditを再起動するか、
+[ツール] &gt; [config.pyの再読み込み] を選択します。
+config.py の記述内容に間違いがあった場合は、以下のようなメッセージがログペインに
+出力されます。注意してください。</p>
+<div class="highlight"><pre>ERROR : 設定ファイルの読み込み中にエラーが発生しました.
+</pre></div>
+<p>config.pyの再読み込みに成功した場合は、以下のようなメッセージが出力されます。</p>
+<div class="highlight"><pre>設定スクリプトをリロードしました.
+</pre></div>
+</blockquote>
+<p><strong>config.pyの書き方</strong></p>
+<blockquote>
+<p>config.py のなかには、configure() という関数を定義します。</p>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">configure</span><span class="p">(</span><span class="n">window</span><span class="p">):</span>
+</pre></div>
+<p>configure() は、config.py が読み込まれた直後に呼ばれる関数で、
+この関数の中で、グローバルなキー割り当てなどを変更することができます。</p>
+<p>configure() の引数 window には、LREditの MainWindow オブジェクトが
+渡されます。MainWindow クラスのプロパティやメソッドを操作することで、
+MainWindow をカスタマイズすることができます。</p>
+</blockquote>
+</blockquote>
+</div>
+<div class="section" id="id43">
+<h2><a class="toc-backref" href="#id97">キーの割り当て</a></h2>
+<blockquote>
+<p>キー割り当ては、以下のように記述します。</p>
+<div class="highlight"><pre><span class="n">window</span><span class="o">.</span><span class="n">keymap</span><span class="p">[</span> <span class="s">&quot;F3&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">window</span><span class="o">.</span><span class="n">command</span><span class="o">.</span><span class="n">SearchNext</span>
+<span class="n">window</span><span class="o">.</span><span class="n">keymap</span><span class="p">[</span> <span class="s">&quot;S-F3&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">window</span><span class="o">.</span><span class="n">command</span><span class="o">.</span><span class="n">SearchPrev</span>
+<span class="n">window</span><span class="o">.</span><span class="n">keymap</span><span class="p">[</span> <span class="s">&quot;C-N&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">window</span><span class="o">.</span><span class="n">command</span><span class="o">.</span><span class="n">SearchNext</span>
+<span class="n">window</span><span class="o">.</span><span class="n">keymap</span><span class="p">[</span> <span class="s">&quot;C-S-N&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">window</span><span class="o">.</span><span class="n">command</span><span class="o">.</span><span class="n">SearchPrev</span>
+</pre></div>
+<p>window.keymap は、キー割り当てを定義するためのプロパティです。</p>
+<p>文字列でキー入力条件を定義します。</p>
+<p><strong>キーの文字列表記</strong></p>
+<blockquote>
+<p>キー入力条件の文字列は、</p>
+<blockquote>
+C-S-Return</blockquote>
+<p>や</p>
+<blockquote>
+Ctrl-Shift-Return</blockquote>
+<p>のように、ハイフンで区切って、モディファイアとメインのキーを組み合わせて
+表現します。</p>
+<p>使用可能なモディファイアの記述方法は以下のとおりです。</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="25%" />
+<col width="75%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">モディファイア</th>
+<th class="head">記述方法</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>Alt</td>
+<td>Alt-, A-</td>
+</tr>
+<tr><td>Control</td>
+<td>Ctrl-, C-</td>
+</tr>
+<tr><td>Shift</td>
+<td>Shift-, S-</td>
+</tr>
+<tr><td>Windows</td>
+<td>Win-, W-</td>
+</tr>
+</tbody>
+</table>
+<p>メインのキーの記述方法は以下のとおりです。</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="45%" />
+<col width="55%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">記述方法</th>
+<th class="head">補足説明</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>A ～ Z</td>
+<td> </td>
+</tr>
+<tr><td>0 ～ 9</td>
+<td> </td>
+</tr>
+<tr><td>Minus</td>
+<td><div class="first last line-block">
+<div class="line">-</div>
+</div>
+</td>
+</tr>
+<tr><td>Plus</td>
+<td><div class="first last line-block">
+<div class="line">+</div>
+</div>
+</td>
+</tr>
+<tr><td>Comma</td>
+<td><div class="first last line-block">
+<div class="line">,</div>
+</div>
+</td>
+</tr>
+<tr><td>Period</td>
+<td><div class="first last line-block">
+<div class="line">.</div>
+</div>
+</td>
+</tr>
+<tr><td>Semicolon</td>
+<td><div class="first last line-block">
+<div class="line">;</div>
+</div>
+</td>
+</tr>
+<tr><td>Colon</td>
+<td><div class="first last line-block">
+<div class="line">:</div>
+</div>
+</td>
+</tr>
+<tr><td>Slash</td>
+<td><div class="first last line-block">
+<div class="line">/</div>
+</div>
+</td>
+</tr>
+<tr><td>BackQuote</td>
+<td><div class="first last line-block">
+<div class="line">`</div>
+</div>
+</td>
+</tr>
+<tr><td>Tilde</td>
+<td><div class="first last line-block">
+<div class="line">~</div>
+</div>
+</td>
+</tr>
+<tr><td>OpenBracket</td>
+<td><div class="first last line-block">
+<div class="line">[</div>
+</div>
+</td>
+</tr>
+<tr><td>BackSlash</td>
+<td><div class="first last line-block">
+<div class="line">＼</div>
+</div>
+</td>
+</tr>
+<tr><td>Yen</td>
+<td><div class="first last line-block">
+<div class="line">￥</div>
+</div>
+</td>
+</tr>
+<tr><td>CloseBracket</td>
+<td><div class="first last line-block">
+<div class="line">]</div>
+</div>
+</td>
+</tr>
+<tr><td>Quote</td>
+<td><div class="first last line-block">
+<div class="line">'</div>
+</div>
+</td>
+</tr>
+<tr><td>DoubleQuote</td>
+<td><div class="first last line-block">
+<div class="line">&quot;</div>
+</div>
+</td>
+</tr>
+<tr><td>Underscore</td>
+<td><div class="first last line-block">
+<div class="line">_</div>
+</div>
+</td>
+</tr>
+<tr><td>Asterisk</td>
+<td><div class="first last line-block">
+<div class="line">*</div>
+</div>
+</td>
+</tr>
+<tr><td>Atmark</td>
+<td><div class="first last line-block">
+<div class="line">&#64;</div>
+</div>
+</td>
+</tr>
+<tr><td>Caret</td>
+<td><div class="first last line-block">
+<div class="line">^</div>
+</div>
+</td>
+</tr>
+<tr><td>NumLock</td>
+<td> </td>
+</tr>
+<tr><td>Divide</td>
+<td><div class="first last line-block">
+<div class="line">/ (テンキー)</div>
+</div>
+</td>
+</tr>
+<tr><td>Multiply</td>
+<td><div class="first last line-block">
+<div class="line">* (テンキー)</div>
+</div>
+</td>
+</tr>
+<tr><td>Subtract</td>
+<td><div class="first last line-block">
+<div class="line">- (テンキー)</div>
+</div>
+</td>
+</tr>
+<tr><td>Add</td>
+<td><div class="first last line-block">
+<div class="line">+ (テンキー)</div>
+</div>
+</td>
+</tr>
+<tr><td>Decimal</td>
+<td><div class="first last line-block">
+<div class="line">. (テンキー)</div>
+</div>
+</td>
+</tr>
+<tr><td>Num0 ～ Num9</td>
+<td><div class="first last line-block">
+<div class="line">0-9 (テンキー)</div>
+</div>
+</td>
+</tr>
+<tr><td>F1 ～ F12</td>
+<td> </td>
+</tr>
+<tr><td>Left, Right, Up, Down</td>
+<td> </td>
+</tr>
+<tr><td>Space</td>
+<td> </td>
+</tr>
+<tr><td>Tab</td>
+<td> </td>
+</tr>
+<tr><td>Back</td>
+<td>バックスペース</td>
+</tr>
+<tr><td>Enter/Return</td>
+<td> </td>
+</tr>
+<tr><td>Escape/Esc</td>
+<td> </td>
+</tr>
+<tr><td>CapsLock/Caps/Capital</td>
+<td> </td>
+</tr>
+<tr><td>Apps</td>
+<td>アプリケーションキー</td>
+</tr>
+<tr><td>Insert</td>
+<td> </td>
+</tr>
+<tr><td>Delete</td>
+<td> </td>
+</tr>
+<tr><td>Home</td>
+<td> </td>
+</tr>
+<tr><td>End</td>
+<td> </td>
+</tr>
+<tr><td>PageUp</td>
+<td> </td>
+</tr>
+<tr><td>PageDown</td>
+<td> </td>
+</tr>
+<tr><td>Alt</td>
+<td> </td>
+</tr>
+<tr><td>LAlt</td>
+<td> </td>
+</tr>
+<tr><td>RAlt</td>
+<td> </td>
+</tr>
+<tr><td>Ctrl</td>
+<td> </td>
+</tr>
+<tr><td>LCtrl</td>
+<td> </td>
+</tr>
+<tr><td>RCtrl</td>
+<td> </td>
+</tr>
+<tr><td>Shift</td>
+<td> </td>
+</tr>
+<tr><td>LShift</td>
+<td> </td>
+</tr>
+<tr><td>RShift</td>
+<td> </td>
+</tr>
+<tr><td>LWin</td>
+<td> </td>
+</tr>
+<tr><td>RWin</td>
+<td> </td>
+</tr>
+<tr><td>PrintScreen</td>
+<td> </td>
+</tr>
+<tr><td>ScrollLock</td>
+<td> </td>
+</tr>
+<tr><td>Pause</td>
+<td> </td>
+</tr>
+<tr><td><div class="first last line-block">
+<div class="line">(0) ～ (255)</div>
+</div>
+</td>
+<td>仮想キーコード指定</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+<p>Colon や Semicolon など、一部の記号キーは、キーボードタイプによって位置が異なります。
+たとえば、日本語キーボードでは、BackQuote は Atmark と 同じ意味になります。
+英語キーボードでは、BackQuote は Tilde と同じ意味になります。</p>
+<p>window.command は、キー割り当て可能なコマンドにアクセスするための CommandMap オブジェクトです。
+window.command.SearchNext や window.command.SearchPrev のように記述することで、
+LREdit が持っている全てのコマンドにアクセスすることができます。</p>
+<p>コマンドの仕組みについては後述します。</p>
+</blockquote>
+</div>
+<div class="section" id="id44">
+<h2><a class="toc-backref" href="#id98">拡張メニューのカスタマイズ</a></h2>
+<blockquote>
+<p>拡張メニューの項目をカスタマイズするには、以下のように記述します。</p>
+<div class="highlight"><pre><span class="n">window</span><span class="o">.</span><span class="n">ext_menu_items</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">(</span> <span class="s">u&quot;他方のペイン&quot;</span><span class="p">,</span> <span class="s">&quot;C-W&quot;</span><span class="p">,</span> <span class="n">window</span><span class="o">.</span><span class="n">command</span><span class="o">.</span><span class="n">AnotherPane</span> <span class="p">),</span>
+    <span class="p">(</span> <span class="s">u&quot;文書リスト&quot;</span><span class="p">,</span>   <span class="s">&quot;C-D&quot;</span><span class="p">,</span> <span class="n">window</span><span class="o">.</span><span class="n">command</span><span class="o">.</span><span class="n">DocumentList</span> <span class="p">),</span>
+<span class="p">]</span>
+</pre></div>
+<p>window.ext_menu_items は、拡張メニューの項目を定義するためのプロパティです。</p>
+<p>( メニュー上での表示文字列, キー割り当て, コマンド ) のリストです。</p>
+</blockquote>
+</div>
+<div class="section" id="id45">
+<h2><a class="toc-backref" href="#id99">独自のメニューを追加する</a></h2>
+<blockquote>
+<p>拡張メニューとは別に、独自のメニューを追加するには、以下のように記述します。</p>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">command_MyMenu</span><span class="p">(</span><span class="n">info</span><span class="p">):</span>
+
+    <span class="n">items</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span> <span class="s">u&quot;自分ツール１&quot;</span><span class="p">,</span> <span class="s">&quot;C-1&quot;</span><span class="p">,</span> <span class="n">command_MyTool1</span> <span class="p">),</span>
+        <span class="p">(</span> <span class="s">u&quot;自分ツール２&quot;</span><span class="p">,</span> <span class="s">&quot;C-2&quot;</span><span class="p">,</span> <span class="n">command_MyTool2</span> <span class="p">),</span>
+    <span class="p">]</span>
+
+    <span class="n">window</span><span class="o">.</span><span class="n">menu</span><span class="p">(</span> <span class="bp">None</span><span class="p">,</span> <span class="n">items</span> <span class="p">)</span>
+
+<span class="n">window</span><span class="o">.</span><span class="n">keymap</span><span class="p">[</span> <span class="s">&quot;C-T&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">command_MyMenu</span>
+</pre></div>
+<p>この例では、command_MyMenu という 独自のメニューを表示するためのコマンドを作成し、
+Ctrl + T に割当てています。</p>
+<p>window.menu() は、拡張メニューのようなスタイルのメニューを表示するためのメソッドです。</p>
+</blockquote>
+</div>
+<div class="section" id="id46">
+<h2><a class="toc-backref" href="#id100">メニューバーのカスタマイズ</a></h2>
+<blockquote>
+<p>以下のように記述することで、メニューバーに項目を追加することが可能です。</p>
+<div class="highlight"><pre><span class="n">window</span><span class="o">.</span><span class="n">appendMenu</span><span class="p">(</span> <span class="p">(</span><span class="s">&quot;view&quot;</span><span class="p">,),</span> <span class="n">MenuNode</span><span class="p">(</span> <span class="s">&quot;duplicate&quot;</span><span class="p">,</span> <span class="s">u&quot;もうひとつ編集(&amp;D)&quot;</span><span class="p">,</span> <span class="n">window</span><span class="o">.</span><span class="n">command</span><span class="o">.</span><span class="n">Duplicate</span> <span class="p">)</span> <span class="p">)</span>
+</pre></div>
+<p>メニューの各アイテムは、MenuNode というクラスのオブジェクトで表します。
+メニューには、項目ごとに文字列の ID が付けられています。</p>
+<p>この例では、&quot;view&quot; という ID が付けられた [表示] メニューの一番下に、
+&quot;duplicate&quot; という ID が付けられた [もうひとつ編集] という項目を追加します。
+このメニュー項目を選択すると、Duplicate コマンドが実行されます。</p>
+<p>以下のように記述すると、階層化されたメニューを追加することができます。</p>
+<div class="highlight"><pre><span class="n">window</span><span class="o">.</span><span class="n">insertMenu</span><span class="p">(</span> <span class="p">(</span><span class="s">&quot;tool&quot;</span><span class="p">,</span><span class="s">&quot;custom_tools_end&quot;</span><span class="p">),</span>
+    <span class="n">MenuNode</span><span class="p">(</span>
+        <span class="s">&quot;mytools&quot;</span><span class="p">,</span> <span class="s">u&quot;自分ツール(&amp;M)&quot;</span><span class="p">,</span>
+        <span class="n">items</span><span class="o">=</span><span class="p">[</span>
+            <span class="n">MenuNode</span><span class="p">(</span> <span class="s">&quot;focus_left&quot;</span><span class="p">,</span>   <span class="s">u&quot;左にフォーカス(&amp;L)&quot;</span><span class="p">,</span> <span class="n">window</span><span class="o">.</span><span class="n">command</span><span class="o">.</span><span class="n">FocusLeft</span> <span class="p">),</span>
+            <span class="n">MenuNode</span><span class="p">(</span> <span class="s">&quot;focus_right&quot;</span><span class="p">,</span>  <span class="s">u&quot;右にフォーカス(&amp;R)&quot;</span><span class="p">,</span> <span class="n">window</span><span class="o">.</span><span class="n">command</span><span class="o">.</span><span class="n">FocusRight</span> <span class="p">),</span>
+        <span class="p">]</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+<p>また、MenuNodeオブジェクトの代わりに、呼び出し可能オブジェクトを渡すと、メニューが開くタイミングで
+動的にメニュー項目を追加することができます。これは、オープンしている文書をメニュー項目として表示する例です。</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">command_SwitchDocument</span><span class="p">:</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">doc</span> <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">doc</span> <span class="o">=</span> <span class="n">doc</span>
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">info</span> <span class="p">):</span>
+        <span class="n">window</span><span class="o">.</span><span class="n">activeOpen</span><span class="p">(</span> <span class="n">doc</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">doc</span> <span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">menuitems_Documents</span><span class="p">():</span>
+    <span class="n">items</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">items</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">MenuNode</span><span class="p">(</span> <span class="n">separator</span><span class="o">=</span><span class="bp">True</span> <span class="p">)</span> <span class="p">)</span>
+    <span class="k">for</span> <span class="n">edit</span> <span class="ow">in</span> <span class="n">window</span><span class="o">.</span><span class="n">edit_list</span><span class="p">:</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">edit</span><span class="o">.</span><span class="n">doc</span><span class="o">.</span><span class="n">getName</span><span class="p">()</span>
+        <span class="n">items</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">MenuNode</span><span class="p">(</span> <span class="s">&quot;doc_</span><span class="si">%d</span><span class="s">&quot;</span><span class="o">%</span><span class="n">i</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">command_SwitchDocument</span><span class="p">(</span><span class="n">edit</span><span class="o">.</span><span class="n">doc</span><span class="p">)</span> <span class="p">)</span> <span class="p">)</span>
+        <span class="n">i</span><span class="o">+=</span><span class="mi">1</span>
+    <span class="n">items</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">MenuNode</span><span class="p">(</span> <span class="n">separator</span><span class="o">=</span><span class="bp">True</span> <span class="p">)</span> <span class="p">)</span>
+    <span class="k">return</span> <span class="n">items</span>
+
+<span class="n">window</span><span class="o">.</span><span class="n">appendMenu</span><span class="p">(</span> <span class="p">(</span><span class="s">&quot;view&quot;</span><span class="p">,),</span> <span class="n">menuitems_Documents</span> <span class="p">)</span>
+</pre></div>
+<p>また上の例では、MenuNode( separator=True ) のように、上下にセパレータを追加しています。
+メニューをグループ化したい場合にセパレータを使うことができます。</p>
+</blockquote>
+</div>
+<div class="section" id="extension">
+<h2><a class="toc-backref" href="#id101">extensionディレクトリ</a></h2>
+<blockquote>
+<p>config.py に、たくさんの設定や機能拡張を詰め込んで記述することも可能ですが、
+１つのファイルが大きくなりすぎると、メンテナンス性が低下してしまいます。</p>
+<p>そのような場合は、extension ディレクトリの中に、機能ごとに Python スクリプト
+ファイルを分割して格納するのが適切です。</p>
+<p>extension ディレクトリは、LREditが内蔵しているPythonインタプリタの、モジュール
+検索パスに登録されているので、config.py のなかで以下のように記述することで、
+使用することができます。</p>
+<blockquote>
+<div class="highlight"><pre><span class="kn">import</span> <span class="nn">ini_mode</span>
+</pre></div>
+</blockquote>
+<p>このように記述した場合、extension/ini_mode.py がロードされ、config.py にインポートされます。</p>
+<p>また、自分が作成した LREdit の拡張機能を、他者にパッケージとして配布する場合も、
+extension ディレクトリ以下にインストールするような形で配布するとよいでしょう。</p>
+</blockquote>
+</div>
+<div class="section" id="id47">
+<h2><a class="toc-backref" href="#id102">モード</a></h2>
+<blockquote>
+<p>LREdit には、JavaMode や PythonMode といった、ファイルの種類毎の編集モードを持っています。
+モードによって、編集対象のファイルに適したシンタックスカラーリング (色つきの表示) や
+キーバインド、モード独自のコマンドの定義が実現されます。</p>
+<p><strong>ファイル名のパターンとモードの関連付け</strong></p>
+<blockquote>
+<p>モードは、編集するファイルのファイル名のパターンによって、自動的に割り当てられます。
+config.py の configure() のなかで、以下のように記述することで、ファイル名のパターンとモードの
+マッピングをカスタマイズすることができます。</p>
+<div class="highlight"><pre><span class="n">window</span><span class="o">.</span><span class="n">fileext_list</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">(</span> <span class="s">&quot;*.py *.pyw *.pys&quot;</span><span class="p">,</span> <span class="s">&quot;python&quot;</span> <span class="p">),</span>
+    <span class="p">(</span> <span class="s">&quot;*.js&quot;</span><span class="p">,</span> <span class="s">&quot;javascript&quot;</span> <span class="p">),</span>
+    <span class="p">(</span> <span class="s">&quot;*.cpp *.cc *.cxx *.hpp *.hh *.hxx *.h&quot;</span><span class="p">,</span> <span class="s">&quot;c++&quot;</span> <span class="p">),</span>
+    <span class="p">(</span> <span class="s">&quot;*.c *.h&quot;</span><span class="p">,</span> <span class="s">&quot;c&quot;</span> <span class="p">),</span>
+    <span class="p">(</span> <span class="s">&quot;*.cs&quot;</span><span class="p">,</span> <span class="s">&quot;c#&quot;</span> <span class="p">),</span>
+    <span class="p">(</span> <span class="s">&quot;*.java&quot;</span><span class="p">,</span> <span class="s">&quot;java&quot;</span> <span class="p">),</span>
+    <span class="p">(</span> <span class="s">&quot;*.vert *.frag *.geo&quot;</span><span class="p">,</span> <span class="s">&quot;glsl&quot;</span> <span class="p">),</span>
+    <span class="p">(</span> <span class="s">&quot;*.xml&quot;</span><span class="p">,</span> <span class="s">&quot;xml&quot;</span> <span class="p">),</span>
+    <span class="p">(</span> <span class="s">&quot;*.html *.htm&quot;</span><span class="p">,</span> <span class="s">&quot;html&quot;</span> <span class="p">),</span>
+    <span class="p">(</span> <span class="s">&quot;makefile *.mk&quot;</span><span class="p">,</span> <span class="s">&quot;makefile&quot;</span> <span class="p">),</span>
+    <span class="p">(</span> <span class="s">&quot;*.bat&quot;</span><span class="p">,</span> <span class="s">&quot;batch&quot;</span> <span class="p">),</span>
+    <span class="p">(</span> <span class="s">&quot;*&quot;</span><span class="p">,</span> <span class="s">&quot;text&quot;</span> <span class="p">),</span>
+<span class="p">]</span>
+</pre></div>
+</blockquote>
+<p><strong>モードの切り替え</strong></p>
+<blockquote>
+<p>コマンドラインで、モードを入力して切り替えることができます。</p>
+<p>例:</p>
+<pre class="literal-block">
+PythonMode
+XmlMode
+</pre>
+</blockquote>
+<p><strong>モードの作成</strong></p>
+<blockquote>
+<p>モードは、ユーザ自身が作成、追加することができます。これは高度なカスタマイズですので、
+よくわからない場合はスキップしてかまいません。</p>
+<p>iniファイルのモードを追加してみましょう。</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">IniLexer</span><span class="p">(</span><span class="n">RegexLexer</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="n">RegexLexer</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">rule_map</span><span class="p">[</span><span class="s">&#39;root&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">(</span><span class="s">r&#39;\s+&#39;</span><span class="p">,</span> <span class="n">Text</span><span class="p">),</span>
+            <span class="p">(</span><span class="s">r&#39;[;#].*?$&#39;</span><span class="p">,</span> <span class="n">Comment</span><span class="p">),</span>
+            <span class="p">(</span><span class="s">r&#39;\[.*?\]$&#39;</span><span class="p">,</span> <span class="n">Keyword</span><span class="p">),</span>
+            <span class="p">(</span><span class="s">r&#39;(.*?)([ \t]*=[ \t]*)(.*?)$&#39;</span><span class="p">,</span> <span class="p">(</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Text</span><span class="p">,</span> <span class="n">String</span><span class="p">)</span> <span class="p">),</span>
+            <span class="p">(</span><span class="bp">None</span><span class="p">,</span><span class="n">Text</span><span class="p">)</span>
+        <span class="p">]</span>
+
+<span class="k">class</span> <span class="nc">IniMode</span><span class="p">(</span><span class="n">Mode</span><span class="p">):</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;ini&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">Mode</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lexer</span> <span class="o">=</span> <span class="n">IniLexer</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">completion</span> <span class="o">=</span> <span class="n">lredit_completion</span><span class="o">.</span><span class="n">WordCompletion</span><span class="p">()</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">staticconfigure</span><span class="p">(</span><span class="n">window</span><span class="p">):</span>
+        <span class="n">Mode</span><span class="o">.</span><span class="n">staticconfigure</span><span class="p">(</span><span class="n">window</span><span class="p">)</span>
+        <span class="n">callConfigFunc</span><span class="p">(</span><span class="s">&quot;staticconfigure_IniMode&quot;</span><span class="p">,</span><span class="n">window</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">configure</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">edit</span> <span class="p">):</span>
+        <span class="n">Mode</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">edit</span> <span class="p">)</span>
+        <span class="n">callConfigFunc</span><span class="p">(</span><span class="s">&quot;configure_IniMode&quot;</span><span class="p">,</span><span class="bp">self</span><span class="p">,</span><span class="n">edit</span><span class="p">)</span>
+</pre></div>
+<p>モードを追加するには、モード自身を表すクラスと、シンタックスハイライトのための
+字句解析を行うクラスの2つを作成する必要があります。
+この例では、iniファイルの字句解析を行うための、IniLexer クラスと、
+iniファイルの振る舞いを定義するための IniMode クラスを定義しています。</p>
+<p>字句解析を行うクラスは、通常 RegexLexer クラスを継承して定義します。
+RegexLexer は、正規表現をつかった字句解析機能を提供します。
+RegexLexer を継承したクラスは、正規表現と字句と状態遷移のルールを
+定義するだけで、字句解析機能を定義することができます。</p>
+<p>また、モードを表すクラスは、通常 Mode クラスを継承して定義します。
+あるいは、PythonModeのような既存のモードクラスをベースにして、
+MyPythonMode のような異なったモードを派生することもできます。</p>
+<p>モードクラスの lexer プロパティには、字句解析クラスを設定する必要があります。
+モードクラスの completion クラスには、補完入力クラスを設定する必要があります。</p>
+<p>モードクラスには、configure()、staticconfigure() という二つのメソッドを
+定義します。</p>
+<p>configure() は、このモードが実際にテキスト編集に使用されるときに呼び出されます。
+このメソッドの中で、モード独自のキー割り当てなどを行うことができます。
+configure() のなかから、config.py のなかの、configure_XxxxMode() を呼び出します。
+そうすることによって、ユーザにモードの動作のカスタマイズの機会を与えます。</p>
+<p>staticconfigure() は、モードクラスが MainWindow 登録された直後に1度だけ呼ばれる
+スタティックなメソッドです。このメソッドの中で、メニューバーに項目を登録するなど
+を行うことができます。staticconfigure() のなかから、
+config.py のなかの、staticconfigure_XxxxMode() を呼び出します。
+そうすることによって、ユーザにモードの動作のカスタマイズの機会を与えます。</p>
+<p>このようにして作成されたモードは、MainWindow オブジェクトの mode_list に登録
+することで、実際に利用可能になります。</p>
+<div class="highlight"><pre><span class="n">window</span><span class="o">.</span><span class="n">mode_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">IniMode</span> <span class="p">)</span>
+</pre></div>
+</blockquote>
+</blockquote>
+</div>
+<div class="section" id="id48">
+<h2><a class="toc-backref" href="#id103">マイナーモード</a></h2>
+<blockquote>
+<p>LREdit には、モードに加えて、マイナーモードという枠組みがあります。
+モードは、テキストファイルの種類に関連付けられているものでしたが、
+マイナーモードは、一時的に切り替え可能なテキスト編集操作をまとめたものです。</p>
+<p>たとえば、矩形選択モードや、罫線モード、といった機能がマイナーモードとして
+提供されます。</p>
+<p>とはいえ、LREditでは、まだ 矩形選択モードや、罫線モード は実際には実装されておらず、
+まだマイナーモードの枠組みは使われていません。</p>
+<p><strong>マイナーモードの切り替え</strong></p>
+<blockquote>
+<p>コマンドラインで、マイナーモードを入力して、On/Offすることができます。</p>
+<p>例:</p>
+<pre class="literal-block">
+TestMode
+</pre>
+</blockquote>
+</blockquote>
+</div>
+<div class="section" id="id49">
+<h2><a class="toc-backref" href="#id104">コマンドシステム</a></h2>
+<blockquote>
+<p>キーに割り当てる機能や、メニューバーに追加する機能は、 <strong>コマンド</strong> という決まった
+書式の呼び出し可能オブジェクトです。コマンドは以下のような型で定義する必要があります。</p>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">command_Hello</span><span class="p">(</span> <span class="n">info</span> <span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span> <span class="s">u&quot;Hello!&quot;</span> <span class="p">)</span>
+</pre></div>
+<p>コマンドの関数名は、command_ でスタートします。
+引数には、CommandInfo オブジェクトを受け取ります。</p>
+<p>コマンドは、MainWindowクラスや、TextEditWidgetクラスのメソッドとして、最初から組み込まれている
+ものが多数存在しますが、これに加えて、モードクラス や マイナーモードクラス、config.py のなかに
+定義することができます。</p>
+<p>MainWindow の command プロパティは、CommandMap オブジェクトです。このオブジェクトを使うと、
+MainWindow だけでなく、TextEditWidget や モードクラス、マイナーモードクラスの
+メソッドとして定義されているコマンドを、透過的に取得したり呼び出したりすることができます。</p>
+<div class="highlight"><pre><span class="n">window</span><span class="o">.</span><span class="n">keymap</span><span class="p">[</span> <span class="s">&quot;C-O&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">window</span><span class="o">.</span><span class="n">command</span><span class="o">.</span><span class="n">Open</span>           <span class="c"># MainWindowが提供しているコマンド</span>
+<span class="n">window</span><span class="o">.</span><span class="n">keymap</span><span class="p">[</span> <span class="s">&quot;C-A&quot;</span> <span class="p">]</span> <span class="o">=</span> <span class="n">window</span><span class="o">.</span><span class="n">command</span><span class="o">.</span><span class="n">SelectDocument</span> <span class="c"># TextEditWidgetが提供しているコマンド</span>
+</pre></div>
+<p>コマンドが受け取る CommandInfo オブジェクトには、コマンドの引数や、押されていたモディファイアキー
+といった情報が格納されています。</p>
+<p>コマンドの引数は、コマンドラインからコマンドを実行したときに、セミコロンで区切って渡すことができます。</p>
+<div class="highlight"><pre>Open;c:/ols/lredit/readme.txt
+</pre></div>
+<p>引数は、CommandInfo の args プロパティに格納されています。</p>
+<div class="highlight"><pre><span class="n">filename</span> <span class="o">=</span> <span class="n">info</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+<p>CommandInfo の mod プロパティには、コマンドラインからコマンドが実行されたときのモディファイアキーが
+格納されています。モディファイアキーの状態によってコマンドの実行内容を切り替えたい場合に利用することが
+できます。</p>
+<div class="highlight"><pre><span class="k">if</span> <span class="n">info</span><span class="o">.</span><span class="n">mod</span> <span class="o">&amp;</span> <span class="n">MODKEY_CTRL</span><span class="p">:</span>
+    <span class="n">do_something</span><span class="p">()</span>
+</pre></div>
+</blockquote>
+</div>
+<div class="section" id="id50">
+<h2><a class="toc-backref" href="#id105">コマンドラインの解釈ルールのカスタマイズ</a></h2>
+<blockquote>
+<p>LREdit のコマンドラインに入力された文字列は、複数の条件でチェックされ、
+最初にヒットした条件で実行されます。</p>
+<p>たとえば、登録コマンドの実行、ファイル名をオープン、数式の計算、といった
+複数の条件をつかって、条件に合う方法で入力されたテキストを解釈/実行することができます。</p>
+<p>window.commandline_list は、このようなコマンドの解釈/実行の機能を持ったオブジェクト
+のリストです。window.commandline_list に 自分で定義したオブジェクトを追加することで、
+独自のコマンドの入力ルールを追加することができます。</p>
+<p>commandline のオブジェクトは、以下のように onCandidate() onEnter() の
+2つのメソッドを備えるオブジェクトである必要があります。</p>
+<div class="highlight"><pre><span class="c"># 固定のコマンドを3つ追加するテスト</span>
+<span class="k">class</span> <span class="nc">commandline_Test</span><span class="p">:</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">items</span> <span class="o">=</span> <span class="p">[</span> <span class="s">&quot;Xxxx&quot;</span><span class="p">,</span> <span class="s">&quot;Yyyy&quot;</span><span class="p">,</span> <span class="s">&quot;Zzzz&quot;</span> <span class="p">]</span>
+
+    <span class="c"># 入力される内容から補完候補を列挙する</span>
+    <span class="k">def</span> <span class="nf">onCandidate</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">update_info</span> <span class="p">):</span>
+
+        <span class="n">left</span> <span class="o">=</span> <span class="n">update_info</span><span class="o">.</span><span class="n">text</span><span class="p">[</span> <span class="p">:</span> <span class="n">update_info</span><span class="o">.</span><span class="n">selectionLeft</span><span class="p">()</span> <span class="p">]</span>
+        <span class="n">left_lower</span> <span class="o">=</span> <span class="n">left</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+        <span class="n">cand_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">:</span>
+
+            <span class="k">if</span> <span class="n">item</span><span class="p">[</span> <span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">left_lower</span><span class="p">)</span> <span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">!=</span> <span class="n">left_lower</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="n">cand_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">cand_list</span>
+
+    <span class="c"># 決定されたコマンドを解釈し可能なら実行する</span>
+    <span class="k">def</span> <span class="nf">onEnter</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">commandline</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">mod</span> <span class="p">):</span>
+
+        <span class="n">text_lower</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">:</span>
+
+            <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">!=</span> <span class="n">text_lower</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="k">print</span><span class="p">(</span> <span class="s">&quot;Execute:&quot;</span><span class="p">,</span> <span class="n">item</span> <span class="p">)</span>
+
+            <span class="n">commandline</span><span class="o">.</span><span class="n">appendHistory</span><span class="p">(</span> <span class="n">text</span> <span class="p">)</span>
+
+            <span class="n">commandline</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
+
+            <span class="k">return</span> <span class="bp">True</span>
+
+        <span class="k">return</span> <span class="bp">False</span>
+
+<span class="c"># commandline_listの先頭に登録する</span>
+<span class="n">window</span><span class="o">.</span><span class="n">commandline_list</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="n">commandline_Test</span><span class="p">()</span> <span class="p">);</span>
+</pre></div>
+</blockquote>
+</div>
+</div>
+<div class="section" id="id51">
+<h1><a class="toc-backref" href="#id106">その他の機能</a></h1>
+<div class="section" id="id52">
+<h2><a class="toc-backref" href="#id107">起動オプション</a></h2>
+<blockquote>
+<p><strong>Ctrlキーによる多重起動の制御</strong></p>
+<blockquote>
+<p>LREdit は、通常の方法で起動した場合、すでに LREdit が起動している
+かをチェックして、起動しているなら既存の LREdit でファイルを開こうと
+します。</p>
+<p>Ctrl キーを押しながら LREdit を起動すると、この動作をキャンセルし、
+多重に LREdit を起動します。</p>
+</blockquote>
+<p><strong>起動オプション一覧</strong></p>
+<blockquote>
+<p>lredit.exe に引数を渡して、LREditの動作を変更することができます。</p>
+<div class="highlight"><pre>usage: lredit_main.py [-h] [--debug] [--profile] [--multi] [--single]
+                      [--readonly] [--text FILENAME [LINE[:INDEX] ...]]
+                      [--project FILENAME] [--compare FILENAME FILENAME]
+                      [file [file ...]]
+</pre></div>
+<dl class="docutils">
+<dt><strong>-h</strong></dt>
+<dd>ヘルプを表示します。(コマンドラインでのみ)</dd>
+<dt><strong>--debug</strong></dt>
+<dd>デバッグ機能を有効にします。
+開発者用のオプションです。</dd>
+<dt><strong>--profile</strong></dt>
+<dd>プロファイル機能 (性能改善のための処理時間解析) を有効にします。
+開発者用のオプションです。</dd>
+<dt><strong>--multi</strong></dt>
+<dd>LREditの複数起動を許可しながら起動します。
+Ctrlキーを押しながら起動したときと同じ動作になります。</dd>
+<dt><strong>--single</strong></dt>
+<dd>LREditの複数起動を禁止しながら起動します。
+このオプションは Ctrl キーよりも優先されます。</dd>
+<dt><strong>--readonly</strong></dt>
+<dd>テキストファイルを読み取り専用モードで開きます。</dd>
+<dt><strong>--text</strong></dt>
+<dd>テキストファイルを開きます。
+ファイル名の後に、100 や 100:20 のように、行番号とインデックスを指定することができます。
+行番号とインデックスは省略可能です。</dd>
+<dt><strong>--project</strong></dt>
+<dd>プロジェクトファイルを開きます。</dd>
+<dt><strong>--compare</strong></dt>
+<dd>このオプションの直後に指定された２つのファイルを比較します。</dd>
+<dt><strong>file [file ...]</strong></dt>
+<dd>残りの引数は、テキストファイル、または、プロジェクトファイルとして解釈されます。
+拡張子が .lre の場合は、プロジェクトファイルとしてオープンされます。</dd>
+</dl>
+</blockquote>
+</blockquote>
+</div>
+</div>
+<div class="section" id="id53">
+<h1><a class="toc-backref" href="#id108">最後に</a></h1>
+<blockquote>
+<p>LREdit は発展途上のテキストエディタですが、Pythonによる拡張が可能であり、
+ソースコードも公開されています。</p>
+<p>新しいプログラミング言語モード、テーマ、便利な機能追加などを自分で作成された
+場合は、是非 craftware までお知らせください。LREdit のオフィシャルな
+パッケージの一部に取り入れて、LREdit をより便利なテキストエディタにしていきましょう。</p>
+</blockquote>
+</div>
+</div>
+</body>
+</html>
