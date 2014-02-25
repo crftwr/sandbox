@@ -1,31 +1,10 @@
-
+﻿
 import re
 import struct
 
 lexer_debug = False
 
 #--------------------------------------------------------------------
-
-class Token:
-
-    stock_SimpleTextLine = struct.pack("ii",0,0)
-        
-    @staticmethod
-    def pack( tokens ):
-        if tokens == [(0,0)]:
-            #print( "simple text line", id(Token.stock_SimpleTextLine) )
-            return Token.stock_SimpleTextLine
-        s = b""
-        for token in tokens:
-            s += struct.pack("ii",token[0],token[1])
-        return s
-
-    @staticmethod
-    def unpack( s ):
-        tokens = []
-        for i in range( 0, len(s), 8 ):
-            tokens.append( struct.unpack( "ii", s[i:i+8] ) )
-        return tokens
 
 Token_Text = 0
 Token_Keyword = 1
@@ -49,17 +28,6 @@ class Lexer:
     def lex( self, ctx, line, detail ):
         pass
 
-## テキストファイル用のシンタックス分析クラス
-class TextLexer(Lexer):
-    def __init__(self):
-        Lexer.__init__(self)
-
-    def lex( self, ctx, line, detail ):
-        if detail:
-            return [ (0,Token_Text) ], ctx
-        else:
-            return ctx
-
 ## 正規表現のテーブルを使ったシンタックス分析クラスのベースクラス
 class RegexLexer(Lexer):
 
@@ -73,7 +41,7 @@ class RegexLexer(Lexer):
         self.compiled = False
 
     def _compile(self):
-    
+
         for k in self.rule_map.keys():
             rule_list = self.rule_map[k]
             for i in range(len(rule_list)):
@@ -86,9 +54,9 @@ class RegexLexer(Lexer):
                 if rule[0]!=None:
                     rule[0] = re.compile( rule[0], self.re_flags )
                 rule_list[i] = rule
-                
+
                 assert( not( isinstance( rule[2], tuple ) or isinstance( rule[2], list ) ) )
-                
+
                 if rule[0]==None or (rule[3] & RegexLexer.Detail)==0:
                     if not k in self.rule_map_ctx:
                         self.rule_map_ctx[k] = []
@@ -97,16 +65,16 @@ class RegexLexer(Lexer):
         self.compiled = True
 
     def lex( self, ctx, line, detail ):
-    
+
         if not self.compiled:
             self._compile()
-    
+
         if lexer_debug:
             print( "line :", line )
 
         tokens = []
         pos = 0
-        
+
         def getRuleList():
             if detail:
                 return self.rule_map[ctx]
@@ -119,7 +87,7 @@ class RegexLexer(Lexer):
 
             if lexer_debug:
                 print( "  context :", ctx )
-                
+
             last = pos==len(line)
 
             nearest_rule = None
@@ -139,12 +107,12 @@ class RegexLexer(Lexer):
                 else:
                     default_rule = rule
                     break
-                
+
             else:
                 if pos<len(line):
                     tokens.append( ( pos, Error ) )
                 break
-                
+
             if lexer_debug:
                 print( "  nearest_rule :", nearest_rule )
                 print( "  default_rule :", default_rule )
@@ -184,10 +152,10 @@ class RegexLexer(Lexer):
                 rule_list = getRuleList()
                 if lexer_debug:
                     print( "  context ->", ctx )
-                    
+
             if default_rule and not nearest_rule:
                 break
-                    
+
             if last:
                 break
 
@@ -202,9 +170,9 @@ class RegexLexer(Lexer):
 
 ## JavaScript のシンタックス解析クラス
 class JavaScriptLexer(RegexLexer):
-    
+
     def __init__(self):
-    
+
         RegexLexer.__init__(self)
 
         self.rule_map['multiline_comment'] = [
@@ -228,7 +196,7 @@ class JavaScriptLexer(RegexLexer):
         """
 
         self.rule_map['root'] = [
-            #(r'^(?=\s|/|<!--)', Token_Text, 'slashstartsregex'), 
+            #(r'^(?=\s|/|<!--)', Token_Text, 'slashstartsregex'),
             (r'\s+', Token_Text),
             (r'<!--', Token_Comment),
             (r'//.*$', Token_Comment),
@@ -266,34 +234,21 @@ class JavaScriptLexer(RegexLexer):
 #----------------------------------------------------------
 
 def main():
-    
+
     ctx = rootContext()
-    
-    if 0:
-        lexer = PythonLexer()
-        lines = [
-        
-            "import os",
-            "import sys",
-        
-            "'''",
-            "abc",
-            "'''",
-        ]
-        
-    if 1:
-        lexer = JavaScriptLexer()
-        lines = [
-            'var a = 1;',
-            'eval( "a=2;" );',
-        ]
-    
+
+    lexer = JavaScriptLexer()
+    lines = [
+        'var a = 1;',
+        'eval( "a=2;" );',
+    ]
+
     error_detected = False
-    
+
     for line in lines:
-        
+
         tokens, ctx = lexer.lex( ctx, line, True )
-    
+
         for i in range(len(tokens)):
             pos1 = tokens[i][0]
             if i+1 < len(tokens):
