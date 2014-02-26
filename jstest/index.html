@@ -1,0 +1,34 @@
+<html>
+<head>
+</head>
+<body>
+<script language="JavaScript">
+
+document.cookie = "test=123";
+
+document.write(document.cookie);
+document.write("<br/>");
+
+for( var a in document )
+{
+	if(a=="cookie")
+	{
+		document.write("found cookie.");
+		document.write("<br/>");
+		break;
+	}
+}
+
+		
+cookie = document.cookie;
+cookie = "test2=456";
+		
+document["cookie"] = "test3=789";
+
+document.write(document["cookie"]);
+document.write("<br/>");
+
+</script>
+Done.
+</body>
+</html>
