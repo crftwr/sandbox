@@ -1,11 +1,10 @@
-﻿
-import re
+﻿import re
 import struct
 
+# 字句解析処理のデバッグをするときTrueにする
 lexer_debug = False
 
-#--------------------------------------------------------------------
-
+# トークンの種類
 Token_Text = 0
 Token_Keyword = 1
 Token_Name = 2
@@ -15,9 +14,6 @@ Token_Preproc = 5
 Token_Comment = 6
 Token_Space = 7
 Token_Error = -1
-
-def rootContext():
-    return 'root'
 
 ## シンタックス分析クラスのベースクラス
 class Lexer:
@@ -40,6 +36,7 @@ class RegexLexer(Lexer):
         self.re_flags = 0
         self.compiled = False
 
+    # 正規表現を事前にコンパイルしておく
     def _compile(self):
 
         for k in self.rule_map.keys():
@@ -64,6 +61,7 @@ class RegexLexer(Lexer):
 
         self.compiled = True
 
+    # 行をトークンに分割する
     def lex( self, ctx, line, detail ):
 
         if not self.compiled:
@@ -233,11 +231,14 @@ class JavaScriptLexer(RegexLexer):
 
 #----------------------------------------------------------
 
-def main():
+def test():
 
-    ctx = rootContext()
+    ctx = 'root'
 
+    # JavaScriptの字句解析オブジェクトを作成
     lexer = JavaScriptLexer()
+
+    # 解析対象データ
     lines = [
         'var a = 1;',
         'eval( "a=2;" );',
@@ -245,8 +246,10 @@ def main():
 
     error_detected = False
 
+    # 行単位で解析処理をまわす
     for line in lines:
 
+        # トークンに分割
         tokens, ctx = lexer.lex( ctx, line, True )
 
         for i in range(len(tokens)):
@@ -257,11 +260,13 @@ def main():
                 pos2 = len(line)
             print( "  %s %s" % ( tokens[i][1], line[pos1:pos2] ) )
 
+            # エラーのトークンが含まれているかチェック
             if tokens[i][1] == Token_Error:
                 error_detected = True
 
+    # １つでもエラーのトークンが含まれていたか
     if error_detected:
         print "error detected !"
 
-main()
+test()
 
