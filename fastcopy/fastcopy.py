@@ -29,8 +29,11 @@ class ReadThread(threading.Thread):
 
             while len(self.data_list) >= data_list_max:
                 self.cond_not_full.wait()
-
+            
+            self.lock.release()
             data = self.fd.read(read_unit)
+            self.lock.acquire()
+
             self.data_list.append(data)
 
             self.cond_not_empty.notify()
